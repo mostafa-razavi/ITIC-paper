@@ -1,0 +1,5 @@
+Note that the urhol, urhov, and uPsat columns are the reported uncertainties from the authors. 
+I am not sure if those are 95% confidence intervals, or standard deviations, etc.
+
+Also, note that NEOC5H12_TraPPE_GEMC has two data sets. 
+One is from the original work in 1999 while the other set (with smaller uncertainties) is from the validation work in 2015.

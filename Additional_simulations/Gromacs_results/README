@@ -1,0 +1,3 @@
+Note that I have already divided the Udep values by the number of molecules.
+
+Also, note that I have not performed replicate simulations. We will need to do this for bootstrapping. But it is relatively fast.
