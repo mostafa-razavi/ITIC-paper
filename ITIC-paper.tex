@@ -24,6 +24,14 @@
 \externaldocument{ITIC-supp}
 \externaldocument[S-]{ITIC-supp}
 
+
+\usepackage[latin1]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+\usepackage{enumitem}
+
+
 \begin{document}
 
 \preprint{AIP/123-QED}
@@ -87,7 +95,7 @@ For a single component system, Eq.~(\ref{eqn:eqn1}) must be satisfied at vapor-l
 \begin{equation}
 \begin{array}{l} {T^{\mathrm{vap}} =T^{\mathrm{liq}} } \\ {P^{\mathrm{vap}} =P^{\mathrm{liq}} } \\ {G^{\mathrm{vap}} =G^{\mathrm{liq}} } \end{array} \label{eqn:eqn1}
 \end{equation}
-where $G$ represents Gibbs free energy, and superscripts ``vap" and ``liq" denote the vapor and liquid phases, respectively. As mentioned in Section~\ref{sec:introduction}, calculating free energy of a system using the ITIC integration method involves connecting the state of interest to a state of known free energy. In the case of phase equilibrium calculation, the state of interest is saturated liquid and the state of known free energy is an ideal gas. In order to go from saturated liquid to low densities we cannot directly pass through the two phase region. To overcome this problem we take an alternative path. First, the temperature of saturated liquid is increased to a supercritical temperature (isochore). Second, the supercritical state is rarefied to low densities (isotherm). It is worth mentioning that this method requires several separate simulations in the canonical ensemble ($NVT$) to provide enough data points on the paths for numerical integration to be accurate. Isochoric and isothermal pathways are shown in Fig.~\ref{fig:ITICpathway}. The first stage involves integrating internal energy, $U$, according to Eq.~(\ref{eqn:eqn6}) which is derived using Eqs.~(\ref{eqn:eqn2}-\ref{eqn:eqn5}):
+where $G$ represents Gibbs free energy, and superscripts ``vap" and ``liq" denote the vapor and liquid phases, respectively. As mentioned in Section~\ref{sec:introduction}, calculating free energy of a system using the ITIC integration method involves connecting the state of interest to a state of known free energy. In the case of phase equilibrium calculation, the state of interest is saturated liquid and the state of known free energy is an ideal gas. In order to go from saturated liquid to low densities we cannot directly pass through the two phase region. To overcome this problem we take an alternative path. First, the temperature of saturated liquid is increased to a supercritical temperature (isochore). Second, the supercritical state is rarefied to low densities (isotherm). It is worth mentioning that this method requires several separate simulations in the canonical ensemble (NVT) to provide enough data points on the paths for numerical integration to be accurate. Isochoric and isothermal pathways are shown in Fig.~\ref{fig:ITICpathway}. The first stage involves integrating internal energy, $U$, according to Eq.~(\ref{eqn:eqn6}) which is derived using Eqs.~(\ref{eqn:eqn2}-\ref{eqn:eqn5}):
 \begin{equation}
 U=kT^{2} \left( \frac{\partial \ln Q}{\partial T}\right) _{\mathrm N,\mathrm V}  \label{eqn:eqn2}
 \end{equation}
@@ -188,10 +196,24 @@ which can be rearranged further to solve for ${\rho _V}$
 \label{eqn:rhoV}
 \end{equation}
 
-Eq.~(\ref{eqn:eqn14}) (or Eq.~(\ref{eqn:rhoV})) is solved for vapor density using the fixed-point iteration method \cite{Burden1985} starting from an initial (low density) guess. Once vapor density is calculated, Eq.~(\ref{eqn:eqn16}) gives the vapor pressure.
+Eq.~(\ref{eqn:eqn14}) (or Eq.~(\ref{eqn:rhoV})) is solved for vapor density using the fixed-point iteration method \cite{Burden1985} starting from an initial low value guess for $\rho_\mathrm{vap}$ and $Z_\mathrm{liq}$. Once vapor density is calculated, Eq.~(\ref{eqn:eqn16}) gives the vapor pressure.
 
 \begin{equation}
-{P_{\mathrm{vap}}} = {Z_{\mathrm{vap}}}{\rho _{\mathrm{vap}}}RT = (1 + {B_2} {\rho _{\mathrm{vap}}} + {B_3}\rho _{\mathrm{vap}}^2){\rho _{\mathrm{vap}}}RT \label{eqn:eqn16}
+P^\mathrm{sat} = P_\mathrm{vap} = {Z_\mathrm{vap}}{\rho _\mathrm{vap}}RT^\mathrm{sat} = (1 + {B_2} {\rho_\mathrm{vap}} + {B_3}\rho _\mathrm{vap}^2){\rho _\mathrm{vap}}RT^\mathrm{sat} 
+\label{eqn:eqn16}
+\end{equation}
+
+Then, $Z_\mathrm{liq}$ is updated 
+\begin{equation}
+{Z_{\mathrm{liq}}} = \frac{P^\mathrm{sat}}{\rho_\mathrm{liq}RT}  
+\label{eqn:zliq}
+\end{equation}
+
+$T^\mathrm{sat}$ is then updated by extrapolating the plot of $Z$ vs $1000/T$. Having new values for $T^\mathrm{sat}$, $Z_{\mathrm{liq}}$, and $\rho_\mathrm{vap}$, the next iteration can be started with Eq.~(\ref{eqn:rhoV}). However, $A^\mathrm{dep}$ should also be corrected since the value of $T^\mathrm{sat}$ is changed. Eq.~(\ref{eqn:aDepCorrection}) is used to serve this purpose. The iteration is stopped when the difference in two consecutive $\rho_\mathrm{vap}$ values are less than a defined tolerance. 
+
+\begin{equation}
+A^\mathrm{dep}_\mathrm{new} = A^\mathrm{dep} + \left( \frac{1}{T^\mathrm{sat}}-\frac{1}{T^\mathrm{IC}} \right) \frac{U^\mathrm{dep}T^\mathrm{sat}+U^\mathrm{dep}T^\mathrm{IC}}{2} 
+\label{eqn:aDepCorrection}
 \end{equation}
 
 In order to obtain any saturation point, one needs to proceed through one isothermal and one isochoric path, to be able to calculate the free energy. The ITIC methodology was tested and validated using NIST Reference Fluid Properties (REFPROP) \cite{LEMMON-RP91} values by which the minimal number of data points on each path required to achieve reliable results was determined. In order to reach the densities of interest and maintain an acceptable accuracy to a reduced temperature of 0.45, one needs at least 9 data points on the isotherm and three data points on the isochore for each saturation point. The highest temperature state points, however, serve on both isochores and isotherm, hence these points are only simulated once. Therefore, a total of 19 state points are required to obtain 5 coexistence conditions. Fig.~\ref{fig:ITICpathway} provides a schematic plot of these state points. The isotherm is constructed at a supercritical temperature. A reduced temperature of $T_{r} \approx 1.2$ was the default value for the isotherm. For some compounds, owing to lack of NIST REFPROP values at high temperatures and the desire to compare isochores and isotherms to NIST REFPROP values when possible, a lower reduced temperature ($T_{r} \approx 1.05$) was chosen for the isotherm. Validations against NIST REFPROP values showed that any reduced temperature from 1.05 to 1.2 leads to acceptable accuracy.
@@ -218,8 +240,64 @@ articulations of Simpson's rule used for numerical integration along the isother
 \label{eqn:eqn19}
 \end{equation}
 
-The $A^{\mathrm{dep}}$ values at points 2, 4, 7, and 9 in Fig.~\ref{fig:ITICpathway} are calculated using Eq.~(\ref{eqn:eqn18}) in which the value of function at three equidistant points on the x-axis are needed. The $A^{\mathrm{dep}}$ values at points 3, 5, and 8 are calculated using Eq.~(\ref{eqn:eqn19}) in which the value of the function at four equidistant points on the $x$ axis are needed. The $A^{\mathrm{dep}}$ at point 6 is equal to the integration value from point 6 to point 8 subtracted from the $A^{\mathrm{dep}}$ value at point 8. The $A^{\mathrm{dep}}$ value at point 1 is equal to the integration value from point 1 to point 4 subtracted from $A^{\mathrm{dep}}$ value at point 4. The green diamonds in Fig.~\ref{fig:ITICpathway} are used in estimating $B_2$ at isothermal temperature (green square) which is an essential part of ITIC integration. The purple diamonds are simulated to obtain a $B_2$ correlation for certain compounds for which $B_2$ at saturation temperatures were not available. The low density simulations (green diamonds and purple diamonds) are extrapolated to $\rho=0$ to estimate $B_2$. Note that the value of $(Z-1)/\rho$ at $\rho=0$ is equal to the second viral coefficient. This method is discussed in detail in Section \ref{sec:VirialCalc}. 
+The $A^{\mathrm{dep}}$ values at points 2, 4, 7, and 9 in Fig.~\ref{fig:ITICpathway} are calculated using Eq.~(\ref{eqn:eqn18}) in which the value of function at three equidistant points on the x-axis are needed. The $A^{\mathrm{dep}}$ values at points 3, 5, and 8 are calculated using Eq.~(\ref{eqn:eqn19}) in which the value of the function at four equidistant points on the $x$ axis are needed. The $A^{\mathrm{dep}}$ at point 6 is equal to the integration value from point 6 to point 8 subtracted from the $A^{\mathrm{dep}}$ value at point 8. The $A^{\mathrm{dep}}$ value at point 1 is equal to the integration value from point 1 to point 4 subtracted from $A^{\mathrm{dep}}$ value at point 4. The green diamonds in Fig.~\ref{fig:ITICpathway} are used in estimating $B_2$ at isothermal temperature (green square) which is an essential part of ITIC integration. The purple diamonds are simulated to obtain a $B_2$ correlation for certain compounds for which $B_2$ at saturation temperatures were not available. The low density simulations (green diamonds and purple diamonds) are extrapolated to $\rho=0$ to estimate $B_2$. Note that the value of $(Z-1)/\rho$ at $\rho=0$ is equal to the second viral coefficient. This method is discussed in detail in Section \ref{sec:VirialCalc}. Figure~\ref{fig:algorithm} illustrates an algorithm starting from determining  ITIC state points to obtaining VLE properties.
 %RAM: Converted all statements about Webbook to REFPROP
+
+\begin{figure}[!h]
+\centering
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, text width=6em, text badly centered, node distance=2cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, text width=20em, text centered, rounded corners, minimum height=1em]
+\tikzstyle{block22} = [rectangle, draw, fill=blue!20, text width=22em, text centered, rounded corners, minimum height=1em]
+\tikzstyle{block15} = [rectangle, draw, fill=blue!20, text width=15em, text centered, rounded corners, minimum height=1em]
+\tikzstyle{smallblock} = [rectangle, draw, fill=blue!20, text width=8em, text centered, rounded corners, minimum height=1em]
+\tikzstyle{line} = [draw, -latex']
+
+\begin{tikzpicture}[node distance = 1cm, auto,thick,scale=0.8, every node/.style={scale=0.8}]
+\node [block22] (pre1) {
+\scriptsize Determine $\rho$ and $T$ values in Fig.~\ref{fig:ITICpathway}:
+\begin{itemize}[]
+\item \scriptsize Choose $\rho^9$, and calculate $\rho^{1-8}$
+\item \scriptsize Estimate $T_\mathrm{sat}^\mathrm{est}$ values ($T^{11,13,15,17,19}$)
+\item \scriptsize Calculate $T^{10,12,14,16,18}$
+\item \scriptsize Choose $\rho$ for green ($T_\mathrm{IT}$) and purple ($T_\mathrm{0.9}$) points
+\end{itemize}
+};
+
+\node [smallblock, below of=pre1,node distance=2.2cm] (step1) {\scriptsize Run NVT simulations};
+\node [block,below of=step1,node distance=1cm] (step2) {\scriptsize Calculate $Z$, $U^\mathrm{dep}$ for all NVT simulations};
+\node [block,below of=step2,node distance=1cm] (step2b) {\scriptsize Calculate $B_2^\mathbb{IT}$ (Eq.~\ref{eqn:Z1rhoB2B3}), and $B_2^\mathrm{sat}$ correlation (Section~\ref{sec:VirialCalc})};
+\node [block,below of=step2b,node distance=1cm] (step3) {\scriptsize Pick an IC from Fig.~\ref{fig:ITICpathway} ($\rho_\mathrm{liq}=\rho^\mathrm{IC}$)};
+\node [block,below of=step3,node distance=2cm] (step4) {\scriptsize Calculate $T^\mathrm{sat}_\mathrm{new}$ by extrapolating $Z$ vs. $1/T$ ($Z=Z_\mathrm{liq}$) };
+\node [block,below of=step4,node distance=1cm] (step5a) {\scriptsize Calculate $A^\mathrm{dep}$ based on $T^\mathrm{sat}=T^\mathrm{sat}_\mathrm{est}$(Eq.~\ref{eqn:eqn8})};
+\node [block,below of=step5a,node distance=1cm] (step5) {\scriptsize Correct $A^\mathrm{dep}$ (Eq.~\ref{eqn:aDepCorrection}) based on $T^\mathrm{sat}_\mathrm{new}$};
+\node [block,below of=step5,node distance=1cm] (step6) {\scriptsize Calculate $\rho_\mathrm{vap}$ (Eq.~\ref{eqn:rhoV}), $P^\mathrm{sat}$(Eq.~\ref{eqn:eqn16})};
+\node [decision,below of=step6,node distance=2.2cm] (step8) {\scriptsize $|\Delta\rho_\mathrm{vap}|<tol$?};
+\node [block15,below of=step8,node distance=2.2cm] (step9) {\scriptsize Report $P^\mathrm{sat}$, $T^\mathrm{sat}$, $\rho_\mathrm{vap}$, and $\rho_\mathrm{liq}$ for IC};
+\node [smallblock,left of=step8,node distance=4.5cm] (step7) {\scriptsize Update $Z_\mathrm{liq}$ (Eq.~\ref{eqn:zliq})};
+\node [decision,below of=step9,node distance=2cm] (step10) {\scriptsize All IC's done?};
+\node [smallblock,below of=step10,node distance=2cm] (step11) {\scriptsize Finish};
+
+\path [line] (pre1) -- (step1);
+\path [line] (step1) -- (step2);
+\path [line] (step2) -- (step2b);
+\path [line] (step2b) -- (step3);
+\path [line] (step3) -- node {\scriptsize Set $Z_\mathrm{liq}=0.01$, $\rho_\mathrm{vap}=0.0$}(step4);
+\path [line] (step4) -- (step5a);
+\path [line] (step5a) -- (step5);
+\path [line] (step5) -- (step6);
+\path [line] (step6) -- (step8);
+\path [line] (step8) -- node {no} (step7);
+\path [line] (step8) -- node {yes}(step9);
+\path [line] (step7) |- (step4);
+\path [line] (step9) -- (step10);
+\path [line] (step10) -- node {yes}(step11);
+\path [line] (step10.east) -- +(3.5,0) |- node[pos=0.01] {no}(step3);
+
+\end{tikzpicture}
+\label{fig:algorithm}
+\caption{Algorithm to obtain VLE from NVT simulations using ITIC method}
+\end{figure}
+
 \section{ITIC Validation}
 \subsection{Validation using NIST REFPROP} \label{sec:NIST-VAL}
 A simple way to test the accuracy of the ITIC method is to use a database that provides precise and self-consistent saturation properties and isochoric/isothermal properties. NIST Reference Fluid Properties (REFPROP) provides such values \cite{LEMMON-RP91,Bucker2006,Lemmon2004,Wagner2002}, which were used to validate the ITIC method. The following comparisons are solely based on NIST REFPROP equations, therefore the lack of statistical noise inherent to molecular simulation allows performing numerical integration very accurately. 
