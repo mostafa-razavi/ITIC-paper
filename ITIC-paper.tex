@@ -1,17 +1,5 @@
-\documentclass[%
- aip,
- jcp,
-%jmp,%
-%bmf,%
- sd,%
-%rsi,%
- amsmath,amssymb,
-%preprint,%
- reprint,%
-%author-year,%
-%author-numerical,%
-]{revtex4-1}
-
+\documentclass[5p,times]{elsarticle}
+%===============
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
 \usepackage{graphicx}
 \usepackage{epstopdf}
@@ -29,40 +17,83 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 
-\usepackage{enumitem}
+%\usepackage{enumitem}
 
+\usepackage[position=top]{subfig}
+%===============
+\usepackage{lineno,hyperref}
+\modulolinenumbers[5]
+
+\journal{Fluid Phase Equilibria}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%% Elsevier bibliography styles
+%%%%%%%%%%%%%%%%%%%%%%%
+%% To change the style, put a % in front of the second line of the current style and
+%% remove the % from the second line of the style you would like to use.
+%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Numbered
+%\bibliographystyle{model1-num-names}
+
+%% Numbered without titles
+%\bibliographystyle{model1a-num-names}
+
+%% Harvard
+%\bibliographystyle{model2-names.bst}\biboptions{authoryear}
+
+%% Vancouver numbered
+%\usepackage{numcompress}\bibliographystyle{model3-num-names}
+
+%% Vancouver name/year
+%\usepackage{numcompress}\bibliographystyle{model4-names}\biboptions{authoryear}
+
+%% APA style
+%\bibliographystyle{model5-names}\biboptions{authoryear}
+
+%% AMA style
+%\usepackage{numcompress}\bibliographystyle{model6-num-names}
+
+%% `Elsevier LaTeX' style
+\bibliographystyle{elsarticle-num}
+%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
-\preprint{AIP/123-QED}
+\begin{frontmatter}
 
 \title{Coexistence Calculation Using the Isothermal-Isochoric Integration Method}
 
+%% Group authors per affiliation:
 \author{S. Mostafa Razavi}
-\email{sr87@uakron.edu}
-\affiliation{Department of Chemical and Biomolecular Engineering, The University of Akron, Akron, Ohio 44325, USA}
+\ead{sr87@uakron.edu}
+\address{Department of Chemical and Biomolecular Engineering, The University of Akron, Akron, Ohio 44325, USA}
 
 \author{Richard A. Messerly}
-\email{richard.messerly@nist.gov}
-\affiliation{Thermodynamics Research Center, National Institute of Standards and Technology, Boulder, Colorado 80305, USA}
+\ead{richard.messerly@nist.gov}
+\address{Thermodynamics Research Center, National Institute of Standards and Technology, Boulder, Colorado 80305, USA}
 
-\author{J. Richard Elliott}
-\email{elliot1@uakron.edu}
-\affiliation{Department of Chemical and Biomolecular Engineering, The University of Akron, Akron, Ohio 44325, USA}
+%% or include affiliations in footnotes:
+%\author[mymainaddress,mysecondaryaddress]{Elsevier Inc}
+%\ead[url]{www.elsevier.com}
 
-\date{\today}
 
-%%%RAM: Search for my comments with "RAM"
-%%%RAM: 4/23/2018
-% Italicized NVT throughout to be consistent with equations and subscripts, etc.
+\author{J. Richard Elliott \corref{mycorrespondingauthor}}
+\cortext[mycorrespondingauthor]{Corresponding author}
+\ead{elliot1@uakron.edu}
+\address{Department of Chemical and Biomolecular Engineering, The University of Akron, Akron, Ohio 44325, USA}
 
 \begin{abstract}
 In this work, an isothermal-isochoric integration (ITIC) method is proposed and tested as a viable method for vapor pressure calculation by molecular simulation. Several tests were carried out to validate the method which resulted in less than 1 \% deviation from NIST REFPROP values for reduced temperatures of less than 0.85. While consistency is achieved between the ITIC method, Gibbs Ensemble Monte Carlo (GEMC) method, and Grand Canonical Monte Carlo (GCMC) method when reduced temperatures of 0.6-0.85, the ITIC method is much more effective for vapor pressure calculations at reduced temperatures of 0.45-0.6, where relative deviations from experimental data are often quite large but important for practical applications. It is shown that computational efficiency for the complete temperature range is often served best by applying the ITIC method for the entire temperature range rather than applying Monte Carlo (MC) methods for part of the range. Furthermore, the ITIC method lends itself to application with molecular dynamics (MD) as well as MC, advancing the prospect of simulation results that are quantitatively consistent across software platforms.
 \end{abstract}
 
-\keywords{Vapor Pressure, Vapor Liquid Equilibria, Phase Diagram, Liquid Density}
+\begin{keyword}
+Vapor Pressure, Vapor Liquid Equilibria, Phase Diagram, Liquid Density
+\end{keyword}
 
-\maketitle
+\end{frontmatter}
+
+%\linenumbers
 
 \section{Introduction} \label{sec:introduction}
 Phase coexistence determination is important when characterizing the physical properties of a chemical compound. Both the vapor pressure ($P^{\mathrm{sat}}$) and saturation liquid and vapor density ($\rho_{\mathrm{liq}}$ and $\rho_{\mathrm{vap}}$) provide sensitive measures of the quality provided by a particular force field. In principle, the computation of phase coexistence is a simple matter of equating pressures, temperatures, and chemical potentials between the coexisting phases. Nevertheless, accurate computation of phase coexistence by molecular simulation has posed challenges over the years. 
@@ -265,8 +296,8 @@ The $A^{\mathrm{dep}}$ values at points 2, 4, 7, and 9 in Fig.~\ref{fig:ITICpath
 
 \node [smallblock, below of=pre1,node distance=2.2cm] (step1) {\scriptsize Run NVT simulations};
 \node [block,below of=step1,node distance=1cm] (step2) {\scriptsize Calculate $Z$, $U^\mathrm{dep}$ for all NVT simulations};
-\node [block,below of=step2,node distance=1cm] (step2b) {\scriptsize Calculate $B_2^\mathbb{IT}$ (Eq.~\ref{eqn:Z1rhoB2B3}), and $B_2^\mathrm{sat}$ correlation (Section~\ref{sec:VirialCalc})};
-\node [block,below of=step2b,node distance=1cm] (step3) {\scriptsize Pick an IC from Fig.~\ref{fig:ITICpathway} ($\rho_\mathrm{liq}=\rho^\mathrm{IC}$)};
+\node [block,below of=step2,node distance=1cm] (stepstep) {\scriptsize Calculate $B_2^\mathrm{IT}$ (Eq.~\ref{eqn:Z1rhoB2B3}), $B_2^\mathrm{sat}$ correlation (Section~\ref{sec:VirialCalc})};
+\node [block,below of=stepstep,node distance=1cm] (step3) {\scriptsize Pick an IC from Fig.~\ref{fig:ITICpathway} ($\rho_\mathrm{liq}=\rho^\mathrm{IC}$)};
 \node [block,below of=step3,node distance=2cm] (step4) {\scriptsize Calculate $T^\mathrm{sat}_\mathrm{new}$ by extrapolating $Z$ vs. $1/T$ ($Z=Z_\mathrm{liq}$) };
 \node [block,below of=step4,node distance=1cm] (step5a) {\scriptsize Calculate $A^\mathrm{dep}$ based on $T^\mathrm{sat}=T^\mathrm{sat}_\mathrm{est}$(Eq.~\ref{eqn:eqn8})};
 \node [block,below of=step5a,node distance=1cm] (step5) {\scriptsize Correct $A^\mathrm{dep}$ (Eq.~\ref{eqn:aDepCorrection}) based on $T^\mathrm{sat}_\mathrm{new}$};
@@ -279,8 +310,8 @@ The $A^{\mathrm{dep}}$ values at points 2, 4, 7, and 9 in Fig.~\ref{fig:ITICpath
 
 \path [line] (pre1) -- (step1);
 \path [line] (step1) -- (step2);
-\path [line] (step2) -- (step2b);
-\path [line] (step2b) -- (step3);
+\path [line] (step2) -- (stepstep);
+\path [line] (stepstep) -- (step3);
 \path [line] (step3) -- node {\scriptsize Set $Z_\mathrm{liq}=0.01$, $\rho_\mathrm{vap}=0.0$}(step4);
 \path [line] (step4) -- (step5a);
 \path [line] (step5a) -- (step5);
@@ -336,7 +367,7 @@ The vapor pressure was shown to be sensitive to the value of $B_3$ at saturation
 \centering
 \caption{Accuracy of the ITIC method for \textit{n}-dodecane when third virial coefficient is used}
 \label{tab:NIST-VAL-C12-FTT}
-\begin{ruledtabular}
+%%%\begin{ruledtabular}
 \begin{tabular}{cccccccccc}
  & {[}K{]} &	 {[}MPa{]} &	 \% 	& {[}$\mathrm{g/cm^3}${]} & \% & {[}$\mathrm{g/cm^3}${]} & \% 	& {[}kJ/mol{]} & \% \\
 $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $P^{\mathrm{sat}}$ & Dev.\footnote{Deviations are calculated using $\frac{\mathrm{ITIC - NIST}}{\mathrm{NIST}} \times 100$} & $\rho_{\mathrm{liq}}$ &	 Dev. & $\rho_{\mathrm{vap}}$ & Dev. & $\Delta H_{\mathrm{v}}$ & Dev. \\
@@ -351,14 +382,15 @@ $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $P^{\mathrm{sat}}$ & Dev.\footnote{D
 0.559 & 368.12    & 0.0015922 & 0.09    & 0.6937     & 0.00    & 0.000089        & 0.10    & 55.06        & 0.04    \\
 0.450 & 296.21    & 0.0000153 & 0.46    & 0.7471     & 0.00    & 0.000001        & 0.89    & 61.76        & 0.01    \\ 			
 \end{tabular}
-\end{ruledtabular}
+%\end{ruledtabular}
+
 \end{table*}
 
 \begin{table*}[]
 \centering
 \caption{Accuracy of the ITIC method for \textit{n}-dodecane when third virial coefficient is not used. For $T_r^{\mathrm{sat}}>0.9$ the fixed-point iteration does not converge.}
 \label{tab:NIST-VAL-C12-FTF}
-\begin{ruledtabular}
+%%%\begin{ruledtabular}
 \begin{tabular}{cccccccccc}
  & {[}K{]} &	 {[}MPa{]} &	 \% 	& {[}$\mathrm{g/cm^3}${]} & \% & {[}$\mathrm{g/cm^3}${]} & \% 	& {[}kJ/mol{]} & \% \\
 $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $P^{\mathrm{sat}}$ & Dev. & $\rho_{\mathrm{liq}}$ &	 Dev. & $\rho_{\mathrm{vap}}$ & Dev. & $\Delta H_{\mathrm{v}}$ & Dev. \\
@@ -373,7 +405,8 @@ $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $P^{\mathrm{sat}}$ & Dev. & $\rho_{\
 0.559 & 368.12 & 0.0015922  & 0.09    & 0.6937 & 0.00   & 0.000089 & 0.10   & 55.06 & 0.04   \\
 0.450 & 296.21 & 0.0000153  & 0.46    & 0.7471 & 0.00   & 0.000001 & 0.89   & 61.76 & 0.01  \\
 \end{tabular}
-\end{ruledtabular}
+%\end{ruledtabular}
+
 \end{table*}
 
 \subsection{Vapor Pressure Sensitivity to Virial Coefficients} \label{sec:Bx-Sensitivity}
@@ -428,7 +461,7 @@ It is shown for TraPPE-UA ethane that at temperatures above $T_r=0.80$, $B_2$ va
 
 \begin{figure}
 \includegraphics[scale=0.3]{Figures/TraPPE-C2-Z1rho.png}
-\caption{Plot of $(Z-1)/\rho$ with respect to $\rho$ for ethane. Blue solid points represent Schultz's $B_2$ values in Ref.~\onlinecite{Ahunbay2004}. Each blue line represents Schultz values of intercept ($B_2$) and slope ($B_3$) at corresponding temperatures. Circles and diamonds are $NVT$ state points simulated in GOMC (GPU Optimized Monte Carlo) package \cite{Mick2013}. Diamond points are very low density simulations that were not used in $B_2$ and $B_3$ calculations. Black, green, and red triangles represent $B_2$ values estimated using Eq.~(\ref{eqn:Z1rhoB2B3}) when all four, first three, or last three state points were used, respectively.}
+\caption{Plot of $(Z-1)/\rho$ with respect to $\rho$ for ethane. Blue solid points represent Schultz's $B_2$ values in Ref.~\cite{Ahunbay2004}. Each blue line represents Schultz values of intercept ($B_2$) and slope ($B_3$) at corresponding temperatures. Circles and diamonds are $NVT$ state points simulated in GOMC (GPU Optimized Monte Carlo) package \cite{Mick2013}. Diamond points are very low density simulations that were not used in $B_2$ and $B_3$ calculations. Black, green, and red triangles represent $B_2$ values estimated using Eq.~(\ref{eqn:Z1rhoB2B3}) when all four, first three, or last three state points were used, respectively.}
 \label{fig:TraPPE-C2-Z1rho}
 \end{figure}
 
@@ -499,7 +532,7 @@ Therefore, we recommend using MC when simulating these low density points. The c
 \centering
 \caption{Compressibility factor and uncertainty at low densities. $\mathrm{STD}_1$ represents the average of four relative standard deviations each calculated during the corresponding individual runs, while $\mathrm{STD}_2$ is the relative standard deviation of $Z$ from four separate runs.}
 \label{tab:FSE}
-\begin{ruledtabular}
+%%%\begin{ruledtabular}
 \begin{tabular}{cc|cc|cc|cc|cc}
        &        & \multicolumn{2}{c}{N=120} & \multicolumn{2}{c}{N=400} & \multicolumn{2}{c}{N=1600} & \multicolumn{2}{c}{N=3200} \\
 Method & $\rho [\mathrm{g/cm^3}]$ & $\mathrm{STD}_1 \%$  & $\mathrm{STD}_2 \%$ & $\mathrm{STD}_1 \%$  & $\mathrm{STD}_2 \%$ & $\mathrm{STD}_1 \%$  & $\mathrm{STD}_2 \%$  & $\mathrm{STD}_1 \%$  & $\mathrm{STD}_2 \%$ \\
@@ -525,7 +558,8 @@ MD-flexible & 0.0857 & 152.29 & 2.52 & 83.85  & 1.15 & 42.60 & 1.20 & 27.49 & 0.
 MD-flexible & 0.1714 & 196.67 & 2.49 & 101.51 & 2.90 & 53.94 & 0.82 & 38.10 & 0.46 \\
 MD-flexible & 0.2571 & 227.96 & 0.94 & 125.42 & 1.28 & 58.77 & 1.60 & 42.61 & 0.87
 \end{tabular}
-\end{ruledtabular}
+%\end{ruledtabular}
+
 \end{table*}
 %RAM: Fig 14-16 need [cm^3/g] on the y-axis
 \begin{figure}
@@ -565,7 +599,7 @@ where $E^{\mathrm{tot}}$, $E^{\mathrm{bonded}}$, and $E^{\mathrm{intra}}$ are th
 \subsection{Bootstraping Method for Uncertainty Calculation}\label{sec:bootstrapping}
 Bootstrapping was used to calculate the statistical uncertainties \cite{Efron1981}. Four series of independent $NVT$ simulations were performed for each compound using different random number generator seeds. The $NVT$ state points required for ITIC analysis were then randomly selected from the four series of $NVT$ state points. This process was repeated 500 times and ITIC analysis was performed each time on the resulting set of randomly selected $NVT$ points. The standard deviations were then calculated from the resulting 500 ITIC outputs. 
 %RAM: We need to be more clear as to what uncertainties we are representing in Figures and Tables. I assume they are standard deviations. But if they are 95\% confidence intervals then this statement will need to be modified.
-The bootstrap standard deviations are represented in Fig.~\ref{fig:EXAMPLE-SIM/TraPPE-C2/Psat}-\ref{fig:EXAMPLE-SIM/Mie-C12/T_rho} and provided in Tables~\ref{tab:EXAMPLE-SIM/TraPPE-C2}-\ref{tab:EXAMPLE-SIM/Mie-C12/}. 
+The bootstrap standard deviations are represented in Fig.~\ref{fig:EXAMPLE-SIM/TraPPE-C2-C12/Psat}-\ref{fig:EXAMPLE-SIM/Mie-C12/T_rho} and provided in Tables~\ref{tab:EXAMPLE-SIM/TraPPE-C2}-\ref{tab:EXAMPLE-SIM/Mie-C12/}. 
 %RAM: 5/3 I think we just want to mention that uncertainties are found for Tsat, Psat, etc. not for rhol
 Note that the ITIC method determines saturation conditions at a fixed value of $\rho_{\mathrm{liq}}$ (equal to the isochoric density) and, therefore, the bootstrap uncertainty in $\rho_{\mathrm{liq}}$ is zero.
 
@@ -629,7 +663,7 @@ U^{\mathrm{dep, sat}}_\mathrm{vap}\approx \rho_{\mathrm{vap}} \beta \frac{dB_2}{
 \end{equation}
 
 \section{Example Simulations} \label{sec:ExampleSim}
-The TraPPE-UA \cite{Martin1998,Martin1999,Wick2000}, Mie-UA \cite{Potoff2009,Mick2017,Barhaghi2017,Mick2015}, and TITP4P/2005 \cite{Abascal2005} models were chosen for the purpose of testing the ITIC method due to the availability of literature simulation results \cite{Martin1998,eggimann2014,Potoff2009,Shen2008}. As mentioned in Section~\ref{sec:SimDetail}, pure ethane and \textit{n}-dodecane systems were simulated using Cassandra package \cite{Shah2017} in the canonical ensemble to obtain the $NVT$ state points. The saturation points calculated using the ITIC method were then compared against TraPPE-UA results obtained using Gibbs Ensemble Monte Carlo method (GEMC) which are available from the TraPPE website.\cite{eggimann2014} Fig.~\ref{fig:EXAMPLE-SIM/TraPPE-C2/Psat}-\ref{fig:EXAMPLE-SIM/TraPPE-C2/T_rho} show this comparison for ethane and Fig.~\ref{fig:EXAMPLE-SIM/TraPPE-C12/Psat}-\ref{fig:EXAMPLE-SIM/TraPPE-C12/T_rho} provide this information for \textit{n}-dodecane. The isothermal/isochoric plots of $A^{\mathrm{dep}}$, $U^{\mathrm{dep}}$, $Z$, $\Delta H_{\mathrm{v}}$, and $B_2$ for all example simulations are included in supplementary material. 
+The TraPPE-UA \cite{Martin1998,Martin1999,Wick2000}, Mie-UA \cite{Potoff2009,Mick2017,Barhaghi2017,Mick2015}, and TITP4P/2005 \cite{Abascal2005} models were chosen for the purpose of testing the ITIC method due to the availability of literature simulation results \cite{Martin1998,eggimann2014,Potoff2009,Shen2008}. As mentioned in Section~\ref{sec:SimDetail}, pure ethane and \textit{n}-dodecane systems were simulated using Cassandra package \cite{Shah2017} in the canonical ensemble to obtain the $NVT$ state points. The saturation points calculated using the ITIC method were then compared against TraPPE-UA results obtained using Gibbs Ensemble Monte Carlo method (GEMC) which are available from the TraPPE website.\cite{eggimann2014} Fig.~\ref{fig:EXAMPLE-SIM/TraPPE-C2-C12/Psat}-\ref{fig:EXAMPLE-SIM/TraPPE-C2-C12/T_rho} show this comparison for ethane and Fig.~\ref{fig:EXAMPLE-SIM/TraPPE-C2-C12/Psat}-\ref{fig:EXAMPLE-SIM/TraPPE-C2-C12/T_rho} provide this information for \textit{n}-dodecane. The isothermal/isochoric plots of $A^{\mathrm{dep}}$, $U^{\mathrm{dep}}$, $Z$, $\Delta H_{\mathrm{v}}$, and $B_2$ for all example simulations are included in supplementary material. 
 %RAM: Included statement about uncertainties being from bootstrapping
 %RAM: 5/3 Removed deviations from NIST REFPROP
 %RAM: 5/3 Also included clarification for why rhol does not have an uncertainty
@@ -639,7 +673,7 @@ The TraPPE-UA \cite{Martin1998,Martin1999,Wick2000}, Mie-UA \cite{Potoff2009,Mic
 \centering
 \caption{ITIC method saturation properties and uncertainties for ethane using TraPPE-UA model. Virial expansion was truncated at $B_2$. ITIC uncertainties correspond to bootstrap standard deviations.}
 \label{tab:EXAMPLE-SIM/TraPPE-C2}
-\begin{ruledtabular}
+%%%\begin{ruledtabular}
 \begin{tabular}{cccccccccccccccccccccccc}
  & \multicolumn{2}{c}{$[\mathrm{K}]$} &	 \multicolumn{2}{c}{$[\mathrm{MPa}]$} & $[\mathrm{g/cm^3}]$ & \multicolumn{2}{c}{$[\mathrm{g/cm^3}]$} & \multicolumn{2}{c}{$[\mathrm{kJ/mol}]$} \\
 $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $\pm$ & $P^{\mathrm{sat}}$ & $\pm$ & $\rho_{\mathrm{liq}}$ & $\rho_{\mathrm{vap}}$ & $\pm$ & $\Delta H_{\mathrm{v}}$ & $\pm$
@@ -651,30 +685,40 @@ $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $\pm$ & $P^{\mathrm{sat}}$ & $\pm$ &
 0.57	&	173.57	&	0.30	&	0.08321	&	0.00147		&	0.5571	&	0.001780	&	0.000029	&	13.804	&	0.002	\\
 0.45	&	138.20	&	0.28	&	0.00632	&	0.00017		&	0.6000	&	0.000166	&	0.000004	&	14.868	&	0.003	\\
 \end{tabular}
-\end{ruledtabular}
+%\end{ruledtabular}
+
 \end{table*}
 
-
-
-
-
 \begin{figure}
-\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TraPPE-C2_psat.png}
-\caption{$P^{\mathrm{sat}}$ plot of TraPPE-UA ethane. The virial expansion shown in Eq.~(\ref{eqn:eqn11}) was truncated at the $B_2$ term. GEMC data were obtained from Ref.~\onlinecite{Martin1998}.}
-\label{fig:EXAMPLE-SIM/TraPPE-C2/Psat}
+\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TraPPE-C2_C12_psat.png}
+\caption{$P^{\mathrm{sat}}$ plot of TraPPE-UA ethane and \textit{n}-dodecane. The virial expansion shown in Eq.~(\ref{eqn:eqn11}) was truncated at the $B_2$ term. GEMC data were obtained from Ref.~\cite{Martin1998}.}
+\label{fig:EXAMPLE-SIM/TraPPE-C2-C12/Psat}
 \end{figure}
 
 \begin{figure}
-\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TraPPE-C2_trho.png}
-\caption{Coexistence curves for TraPPE-UA ethane. The virial expansion shown in Eq.~(\ref{eqn:eqn11}) was truncated at the $B_2$ term. GEMC data were obtained from Ref.~\onlinecite{Martin1998}.}
-\label{fig:EXAMPLE-SIM/TraPPE-C2/T_rho}
+\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TraPPE-C2_C12_trho.png}
+\caption{Coexistence curves for TraPPE-UA ethane and \textit{n}-dodecane. The virial expansion shown in Eq.~(\ref{eqn:eqn11}) was truncated at the $B_2$ term. GEMC data were obtained from Ref.~\cite{Martin1998}.}
+\label{fig:EXAMPLE-SIM/TraPPE-C2-C12/T_rho}
 \end{figure}
+
+
+%\begin{figure}
+%\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TraPPE-C2_psat.png}
+%\caption{$P^{\mathrm{sat}}$ plot of TraPPE-UA ethane. The virial expansion shown in Eq.~(\ref{eqn:eqn11}) was truncated at the $B_2$ term. GEMC data were obtained from Ref.~\cite{Martin1998}.}
+%\label{fig:EXAMPLE-SIM/TraPPE-C2/Psat}
+%\end{figure}
+
+%\begin{figure}[h]
+%\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TraPPE-C2_trho.png}
+%\caption{Coexistence curves for TraPPE-UA ethane. The virial expansion shown in Eq.~(\ref{eqn:eqn11}) was truncated at the $B_2$ term. GEMC data were obtained from Ref.~\cite{Martin1998}.}
+%\label{fig:EXAMPLE-SIM/TraPPE-C2/T_rho}
+%\end{figure}
 
 \begin{table*}[]
 \centering
 \caption{ITIC method saturation properties and uncertainties for \textit{n}-dodecane using TraPPE-UA model. Virial expansion was truncated at $B_2$. ITIC uncertainties correspond to bootstrap standard deviations.}
 \label{tab:EXAMPLE-SIM/TraPPE-C12}
-\begin{ruledtabular}
+%%%\begin{ruledtabular}
 \begin{tabular}{cccccccccccccccccccccccc}
  & \multicolumn{2}{c}{$[\mathrm{K}]$} &	 \multicolumn{2}{c}{$[\mathrm{MPa}]$} & $[\mathrm{g/cm^3}]$ & \multicolumn{2}{c}{$[\mathrm{g/cm^3}]$} & \multicolumn{2}{c}{$[\mathrm{kJ/mol}]$} \\
 $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $\pm$ & $P^{\mathrm{sat}}$ & $\pm$ & $\rho_{\mathrm{liq}}$ & $\rho_{\mathrm{vap}}$ & $\pm$ & $\Delta H_{\mathrm{v}}$ & $\pm$
@@ -686,14 +730,15 @@ $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $\pm$ & $P^{\mathrm{sat}}$ & $\pm$ &
 0.57	&	376.92	&	0.95	&	0.00419	&	0.000210	&	0.6937	&	0.000229	&	0.0000111	&	49.517	&	0.021	\\
 0.46	&	305.16	&	0.68	&	0.00008	&	0.000005	&	0.7471	&	0.000005	&	0.0000003	&	54.757	&	0.008	\\				
 \end{tabular}
-\end{ruledtabular}
+%\end{ruledtabular}
+
 \end{table*}
 
 \begin{table*}[]
 \centering
 \caption{ITIC method saturation properties and uncertainties for \textit{n}-dodecane using Mie-UA model. Virial expansion was truncated at $B_2$. ITIC uncertainties correspond to bootstrap standard deviations.}
 \label{tab:EXAMPLE-SIM/Mie-C12/}
-\begin{ruledtabular}
+%%%%\begin{ruledtabular}
 \begin{tabular}{cccccccccccccccccccccccc}
  & \multicolumn{2}{c}{$[\mathrm{K}]$} &	 \multicolumn{2}{c}{$[\mathrm{MPa}]$}	& $[\mathrm{g/cm^3}]$ & \multicolumn{2}{c}{$[\mathrm{g/cm^3}]$} & \multicolumn{2}{c}{$[\mathrm{kJ/mol}]$} \\
 $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $\pm$ & $P^{\mathrm{sat}}$ & $\pm$ & $\rho_{\mathrm{liq}}$ & $\rho_{\mathrm{vap}}$ & $\pm$ & $\Delta H_{\mathrm{v}}$ & $\pm$
@@ -705,14 +750,14 @@ $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $\pm$ & $P^{\mathrm{sat}}$ & $\pm$ &
 0.56	&	368.28	&	2.15	&	0.00146	&	0.000158	&	0.6937	&	0.000081	&	0.0000084	&	56.281	&	0.029	\\
 0.45	&	294.97	&	1.99	&	0.00001	&	0.000002	&	0.7471	&	0.000001	&	0.0000001	&	62.700	&	0.037	\\
 \end{tabular}
-\end{ruledtabular}
+%\end{ruledtabular}
 \end{table*}
 
 \begin{table*}[]
 \centering
 \caption{ITIC method saturation properties for water using TIP4P/2005 model. Virial expansion was truncated at $B_2$. ITIC uncertainties are not reported due to high computational cost of replicate simulations.}
 \label{tab:EXAMPLE-SIM/TIP4P-water}
-\begin{ruledtabular}
+%%%%\begin{ruledtabular}
 \begin{tabular}{cccccc}
  & {[}K{]} &	 {[}MPa{]} & {[}$\mathrm{g/cm^3}${]} & {[}$\mathrm{g/cm^3}${]}	& {[}kJ/mol{]}  \\
 $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $P^{\mathrm{sat}}$ & $\rho_{\mathrm{liq}}$ & $\rho_{\mathrm{vap}}$ & $\Delta H_{\mathrm{v}}$ \\
@@ -723,31 +768,37 @@ $T_r^{\mathrm{sat}}$ & $T^{\mathrm{sat}}$ & $P^{\mathrm{sat}}$ & $\rho_{\mathrm{
 0.63	&	405.95	&	0.11965	&	0.9267	&	0.000651	&	44.47	\\
 0.47	&	301.91	&	0.00093	&	0.9980	&	0.000007	&	49.98	\\
 \end{tabular}
-\end{ruledtabular}
+%\end{ruledtabular}
 \end{table*}
 
 
 
 
-\begin{figure}
-\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TraPPE-C12_psat.png}
-\caption{$P^{\mathrm{sat}}$ plot of TraPPE-UA \textit{n}-dodecane. The virial expansion shown in Eq.~(\ref{eqn:eqn11}) was truncated at the $B_2$ term. GEMC data were obtained from Ref.~\onlinecite{Martin1998}.}
-\label{fig:EXAMPLE-SIM/TraPPE-C12/Psat}
-\end{figure}
+%\begin{figure}
+%\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TraPPE-C12_psat.png}
+%\caption{$P^{\mathrm{sat}}$ plot of TraPPE-UA \textit{n}-dodecane. The virial expansion shown in Eq.~(\ref{eqn:eqn11}) was truncated at the $B_2$ term. GEMC data were obtained from Ref.~\cite{Martin1998}.}
+%\label{fig:EXAMPLE-SIM/TraPPE-C12/Psat}
+%\end{figure}
+
+%\begin{figure}
+%\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TraPPE-C12_trho.png}
+%\caption{Coexistence curves for TraPPE-UA \textit{n}-dodecane. The virial expansion shown in Eq.~(\ref{eqn:eqn11}) was truncated at the $B_2$ term. GEMC data were obtained from Ref.~\cite{Martin1998}.}
+%\label{fig:EXAMPLE-SIM/TraPPE-C12/T_rho}
+%\end{figure}
+
+
+The ITIC method was also compared to histogram-reweighting Monte Carlo in the grand canonical ensemble (GCMC). \textit{n}-Dodecane was simulated with Cassandra using Mie-UA potential parameters \cite{Potoff2009}. GCMC results in Fig.~\ref{fig:EXAMPLE-SIM/Mie-C12-TIP4P/Psat} and Fig.~\ref{fig:EXAMPLE-SIM/Mie-C12/T_rho} are not available below a minimum reduced temperature ($T_r^{\mathrm{min}}$) of 0.67, however the ITIC method allowed us to calculate vapor pressure and liquid densities densities for reduced temperatures as low as 0.45. In this simulation $B_3$ was not used and a $B_2$ correlation was obtained using the method described in Section~\ref{sec:VirialCalc}. Fig.~\ref{fig:EXAMPLE-SIM/Mie-C12/Z_rho} shows the supercritical isotherm and the state points used for $B_2$ calculation.
+
+%\begin{figure}
+%\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_Mie-C12_psat.png}
+%\caption{Clausius-Clapeyron plot of Mie-UA \textit{n}-dodecane. GCMC data were obtained from Potoff's work\cite{Potoff2009}.}
+%\label{fig:EXAMPLE-SIM/Mie-C12/Psat}
+%\end{figure}
 
 \begin{figure}
-\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TraPPE-C12_trho.png}
-\caption{Coexistence curves for TraPPE-UA \textit{n}-dodecane. The virial expansion shown in Eq.~(\ref{eqn:eqn11}) was truncated at the $B_2$ term. GEMC data were obtained from Ref.~\onlinecite{Martin1998}.}
-\label{fig:EXAMPLE-SIM/TraPPE-C12/T_rho}
-\end{figure}
-
-
-The ITIC method was also compared to histogram-reweighting Monte Carlo in the grand canonical ensemble (GCMC). \textit{n}-Dodecane was simulated with Cassandra using Mie-UA potential parameters \cite{Potoff2009}. GCMC results in Fig.~\ref{fig:EXAMPLE-SIM/Mie-C12/Psat} and Fig.~\ref{fig:EXAMPLE-SIM/Mie-C12/T_rho} are not available below a minimum reduced temperature ($T_r^{\mathrm{min}}$) of 0.67, however the ITIC method allowed us to calculate vapor pressure and liquid densities densities for reduced temperatures as low as 0.45. In this simulation $B_3$ was not used and a $B_2$ correlation was obtained using the method described in Section~\ref{sec:VirialCalc}. Fig.~\ref{fig:EXAMPLE-SIM/Mie-C12/Z_rho} shows the supercritical isotherm and the state points used for $B_2$ calculation.
-
-\begin{figure}
-\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_Mie-C12_psat.png}
-\caption{Clausius-Clapeyron plot of Mie-UA \textit{n}-dodecane. GCMC data were obtained from Potoff's work\cite{Potoff2009}.}
-\label{fig:EXAMPLE-SIM/Mie-C12/Psat}
+\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_Mie-C12_TIP4P-psat.png}
+\caption{Comaprison between Clausius-Clapeyron plot of Mie-UA \textit{n}-dodecane and TIP4P/2005 water obtained using ITIC and GCMC methods. GCMC data of Mie-UA were obtained from Potoff's work\cite{Potoff2009} and GCMC data of TIP4P/2005 water were obtained from NIST Standard Reference Simulation website \cite{Shen2008}. $B_2$ values at saturation temperatures for Mie-UA \textit{n}-dodecane were obtained using low density simulations (Figure~\ref{fig:EXAMPLE-SIM/Mie-C12/Z_rho}). These values for TIP4P/2005 water were obtained from Benjamin et al.\cite{Benjamin2007} and Chiavo et al. \citep{Chialvo2006}}
+\label{fig:EXAMPLE-SIM/Mie-C12-TIP4P/Psat}
 \end{figure}
 
 \begin{figure}
@@ -764,14 +815,14 @@ The ITIC method was also compared to histogram-reweighting Monte Carlo in the gr
 
 
 
-In order to validate the ITIC method for polar molecules, the results of the ITIC method using TIP4P/2005 water simulated in Cassandra were compared against TIP4P/2005 data from NIST Standard Reference Simulation \cite{Shen2008} simulated using grand-canonical Wang-Landau/Transition-matrix Monte Carlo and histogram re-weighting. Fig.~\ref{fig:EXAMPLE-SIM/TIP4P05/Psat} and Fig.~\ref{fig:EXAMPLE-SIM/TIP4P05/T_rho} shows the agreement between the two methods for TIP4P/2005 water. The absolute average deviation percent between vapor pressure calculated using ITIC method and NIST simulation data for TIP4P/2005 water shown in Fig.~\ref{fig:EXAMPLE-SIM/TIP4P05/Psat} is less than 3 \%. 
+In order to validate the ITIC method for polar molecules, the results of the ITIC method using TIP4P/2005 water simulated in Cassandra were compared against TIP4P/2005 data from NIST Standard Reference Simulation \cite{Shen2008} simulated using grand-canonical Wang-Landau/Transition-matrix Monte Carlo and histogram re-weighting. Fig.~\ref{fig:EXAMPLE-SIM/Mie-C12-TIP4P/Psat} and Fig.~\ref{fig:EXAMPLE-SIM/TIP4P05/T_rho} shows the agreement between the two methods for TIP4P/2005 water. The absolute average deviation percent between vapor pressure calculated using ITIC method and NIST simulation data for TIP4P/2005 water shown in Fig.~\ref{fig:EXAMPLE-SIM/Mie-C12-TIP4P/Psat} is less than 3 \%. 
 
 
-\begin{figure}
-\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TIP4P05_psat.png}
-\caption{Clausius-Clapeyron plot of TIP4P/2005 water. GCMC data were obtained from NIST Standard Reference Simulation website \cite{Shen2008}. $B_2$ values at saturation temperatures were obtained from Benjamin et al.\cite{Benjamin2007} and Chiavo et al. \citep{Chialvo2006}. }
-\label{fig:EXAMPLE-SIM/TIP4P05/Psat}
-\end{figure}
+%\begin{figure}
+%\includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TIP4P05_psat.png}
+%\caption{Clausius-Clapeyron plot of TIP4P/2005 water. GCMC data were obtained from NIST Standard Reference Simulation website \cite{Shen2008}. $B_2$ values at saturation temperatures were obtained from Benjamin et al.\cite{Benjamin2007} and Chiavo et al. \citep{Chialvo2006}. }
+%\label{fig:EXAMPLE-SIM/TIP4P05/Psat}
+%\end{figure}
 
 \begin{figure}
 \includegraphics[scale=0.30]{Figures/EXAMPLE-SIM_TIP4P05_trho.png}
@@ -798,5 +849,9 @@ This research was performed while R.A.M. held a National Research Council (NRC) 
 See supplementary material for density, temperature, $Z$ and energies of simulated state points for all simulated compounds, as well as the isothermal/isochoric plots of $A^{\mathrm{dep}}$, $U^{\mathrm{dep}}$, $Z$, $\Delta H_{\mathrm{v}}$, and $B_2$ for all example simulations. 
 
 \section{References} \label{sec:ref} 
+
+%\section*{References}
+
 \bibliography{ITIC-Paper}
+
 \end{document}
