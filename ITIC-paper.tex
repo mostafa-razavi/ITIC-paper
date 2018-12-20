@@ -580,50 +580,15 @@ $B_3$ calculation using Eq.~(\ref{eqn:Z1rhoB2B3}) deviates significantly from th
 \section{Finite Size Effects}\label{sec:FSE}
 According to Figure~\ref{fig:B2-sensitivity}(a), $P^{\mathrm{sat}}$ accuracy is sensitive to accuracy of $B_2$ values at the isothermal temperature ($B_2^{\mathrm{IT}}$). This sensitivity is due to accumulation of errors when integrating along isotherm, such that an error in $B_2^{\mathrm{IT}}$ affects the $A^{\mathrm{dep}}$ values at all other points along the isotherm and isochores. Similarly, one would expect a significant influence from low density points, i.e. points 1, 2, and 3 in Figure~(\ref{fig:ITICpathway}). Therefore, it is important to investigate the factors affecting the accuracy of $Z$ at low densities on the isotherm. The factors considered in this study are system size, the choice of MD or MC, and the choice of fixed bonds or flexible bonds. 
 
-The system size effects at low densities are demonstrated in Figure~\ref{fig:FSE_TraPPE_C2_abc}. Plot of $(Z-1)/\rho$ with respect to $\rho$ shown in Figure~\ref{fig:FSE_TraPPE_C2_abc}(a) demonstrates the effect of varying number of molecules in MD simulation of ethane with rigid bonds. In order to match the $B_2+B_3 \rho+B_4 \rho^2$ line which represents the rigorous values of $(Z-1)/\rho$, we need 3200 ethane molecules to achieve low enough uncertainties for accurate extrapolation of $B_2$ for the simulation times chosen. In the MD simulations shown in Figure~\ref{fig:FSE_TraPPE_C2_abc}(a) C-C bonds are held constant using the SHAKE algorithm \cite{Ryckaert1977}. 
+The system size effects at low densities are demonstrated in Figure~\ref{fig:FSE_TraPPE_C2_abc}. Plot of $(Z-1)/\rho$ with respect to $\rho$ shown in Figure~\ref{fig:FSE_TraPPE_C2_abc}(a) demonstrates the effect of varying number of molecules in MD simulation of ethane with rigid bonds. As shown in Figure~\ref{fig:FSE_TraPPE_C2_abc}(a), in order to match the $B_2+B_3 \rho+B_4 \rho^2$ line which represents the rigorous values of $(Z-1)/\rho$, we need 3200 ethane molecules to achieve low enough uncertainties for accurate extrapolation of $B_2$ for the simulation times chosen. In the MD simulations shown in Figure~\ref{fig:FSE_TraPPE_C2_abc}(a) C-C bonds are held constant using the SHAKE algorithm \cite{Ryckaert1977}. 
 
-The effect of using flexible bonds is shown in Figure~\ref{fig:FSE_TraPPE_C2_abc}(b). The systematic discrepancy from rigorous values (solid black line) as well as large uncertainties suggests not using flexible bonds at very low densities. A major problem with MD simulations with flexible bonds is the large pressure and energy fluctuations leading to the need for long equilibration and production times.
-
+The effect of using flexible bonds is shown in Figure~\ref{fig:FSE_TraPPE_C2_abc}(b). The systematic discrepancy from rigorous values (solid black line) as well as large uncertainties suggests not using flexible bonds at very low densities. The divergence of pressure at low densities is presumably due to the small number of intermolecular collisions at low density relative to the large number of intramolecular collisions, inhibiting the equilibration of the various components of momentum. In Supplementary Materials, we illustrate one manner of correcting for this deficiency by modifying the intramolecular virial when different virial contributions are separately accessible.
 
 Figure~\ref{fig:FSE_TraPPE_C2_abc}(c) shows the low density $NVT$ state points simulated using GOMC \cite{Mick2013}. This plot shows that the MC method gives more reliable results than MD for low density $NVT$ state points. 
-
-Table~\ref{tab:FSE} compares the uncertainties of $Z$ when using different simulation methods. $\mathrm{STD}_1$ represents the average of four relative standard deviations of $Z$ (i.e., $\mathrm{STD}/Z\times100 \, \%$), each calculated during a single run, while $\mathrm{STD}_2$ is the relative standard deviation of $Z$ from four separate runs. According to this table, the standard deviations from four replicate simulations ($\mathrm{STD}_2$) are much smaller than the average standard deviation for a single run ($\mathrm{STD}_1$). Therefore, Figure~\ref{fig:FSE_TraPPE_C2_abc} is plotted based on $\mathrm{STD}_2$ uncertainties. Table~\ref{tab:FSE} also shows that MC results have nearly an order of magnitude smaller $\mathrm{STD}_1$ and $\mathrm{STD}_2$ than rigid or flexible MD results when $N < 3200$.  
-
-Therefore, we recommend using MC when simulating these low density points. The choice of MD or MC for other high density state points in ITIC method is less important, because they generally agree with each other within their uncertainties. In this study, we use MC for all state points when computing VLE.
-
-\begin{table*}[]
-\centering
-\caption{Compressibility factor and uncertainty at low densities. $\mathrm{STD}_1$ represents the average of four relative standard deviations each calculated during the corresponding individual runs, while $\mathrm{STD}_2$ is the relative standard deviation of $Z$ from four separate runs.}
-\label{tab:FSE}
-%%%\begin{ruledtabular}
-\begin{tabular}{cc|cc|cc|cc|cc}
-       &        & \multicolumn{2}{c}{N=120} & \multicolumn{2}{c}{N=400} & \multicolumn{2}{c}{N=1600} & \multicolumn{2}{c}{N=3200} \\
-Method & $\rho [\mathrm{g/cm^3}]$ & $\mathrm{STD}_1 \%$  & $\mathrm{STD}_2 \%$ & $\mathrm{STD}_1 \%$  & $\mathrm{STD}_2 \%$ & $\mathrm{STD}_1 \%$  & $\mathrm{STD}_2 \%$  & $\mathrm{STD}_1 \%$  & $\mathrm{STD}_2 \%$ \\
-\hline
-MC-rigid    & 0.0214 & 1.05   & 0.10 & 0.62   & 0.05 & 0.46  & 0.05 & -     & -    \\
-MC-rigid    & 0.0286 & 1.27   & 0.11 & 0.69   & 0.06 & 0.55  & 0.06 & -     & -    \\
-MC-rigid    & 0.0429 & 1.60   & 0.17 & 0.96   & 0.00 & 0.76  & 0.11 & -     & -    \\
-MC-rigid    & 0.0857 & 2.54   & 0.23 & 1.59   & 0.08 & 1.38  & 0.17 & -     & -    \\
-MC-rigid    & 0.1714 & 4.54   & 0.26 & 3.16   & 0.26 & 2.91  & 0.30 & -     & -    \\
-MC-rigid    & 0.2571 & 6.55   & 0.60 & 4.62   & 0.63 & 4.32  & 0.25 & -     & -    \\
-\hline
-MD-rigid    & 0.0214 & 11.71  & 0.94 & 6.31   & 0.72 & 3.20  & 2.41 & 2.30  & 0.10 \\
-MD-rigid    & 0.0286 & 13.56  & 1.02 & 7.33   & 0.16 & 3.80  & 4.78 & 2.60  & 0.11 \\
-MD-rigid    & 0.0429 & 17.30  & 0.76 & 9.46   & 0.53 & 4.79  & 2.45 & 3.23  & 0.20 \\
-MD-rigid    & 0.0857 & 28.35  & 1.14 & 15.01  & 0.36 & 7.49  & 0.39 & 5.15  & 0.36 \\
-MD-rigid    & 0.1714 & 49.89  & 1.53 & 25.46  & 1.73 & 13.56 & 0.55 & 9.15  & 0.64 \\
-MD-rigid    & 0.2571 & 65.65  & 2.44 & 35.96  & 0.75 & 18.38 & 0.52 & 12.57 & 0.47 \\
-\hline
-MD-flexible & 0.0214 & 106.25 & 1.39 & 59.51  & 0.88 & 29.67 & 0.78 & 19.12 & 0.56 \\
-MD-flexible & 0.0286 & 113.52 & 2.01 & 61.35  & 0.45 & 30.83 & 0.66 & 20.39 & 0.59 \\
-MD-flexible & 0.0429 & 129.34 & 3.16 & 65.61  & 0.71 & 35.84 & 0.32 & 22.10 & 0.34 \\
-MD-flexible & 0.0857 & 152.29 & 2.52 & 83.85  & 1.15 & 42.60 & 1.20 & 27.49 & 0.33 \\
-MD-flexible & 0.1714 & 196.67 & 2.49 & 101.51 & 2.90 & 53.94 & 0.82 & 38.10 & 0.46 \\
-MD-flexible & 0.2571 & 227.96 & 0.94 & 125.42 & 1.28 & 58.77 & 1.60 & 42.61 & 0.87
-\end{tabular}
-%\end{ruledtabular}
-
-\end{table*}
+%Presumably, this is because MC codes calculate the pressure using the intermolecular virial only.
+%Reviewer2: MC method are generally using the molecular virial route in which PV = NkT + W' where N is the number of molecules (not the number of atoms) and where the virial W' contains contributions from intermolecular forces only. 
+%Table~\ref{tab:FSE} compares the uncertainties of $Z$ when using different simulation methods. $\mathrm{STD}_1$ represents the average of four relative standard deviations of $Z$ (i.e., $\mathrm{STD}/Z\times100 \, \%$), each calculated during a single run, while $\mathrm{STD}_2$ is the relative standard deviation of $Z$ from four separate runs. According to this table, the standard deviations from four replicate simulations ($\mathrm{STD}_2$) are much smaller than the average standard deviation for a single run ($\mathrm{STD}_1$). Therefore, Figure~\ref{fig:FSE_TraPPE_C2_abc} is plotted based on $\mathrm{STD}_2$ uncertainties. Table~\ref{tab:FSE} also shows that MC results have nearly an order of magnitude smaller $\mathrm{STD}_1$ and $\mathrm{STD}_2$ than rigid or flexible MD results when $N < 3200$.  
+Therefore, we recommend using MC when simulating these low density points. The choice of MD or MC for other high density state points in ITIC method is less important, because they generally agree with each other within their uncertainties. %In this study, we use MC for all state points when computing VLE.
 
 \begin{figure*}
 \centering
@@ -631,7 +596,7 @@ MD-flexible & 0.2571 & 227.96 & 0.94 & 125.42 & 1.28 & 58.77 & 1.60 & 42.61 & 0.
 \subfloat[MD flexible]{\includegraphics[scale=0.22]{Figures/FSE_TraPPE-C2_Lammps-flex_IT.png}}
 \subfloat[MC rigid]{\includegraphics[scale=0.22]{Figures/FSE_TraPPE-C2_GOMC_IT.png}}
 \caption{ Effect of number of ethane molecules on compressibility factor at low densities at $T^{\mathrm{IT}}=360$. Panel \textbf{a)} is from MD with rigid bonds (using SHAKE algorithm in LAMMPS), panel \textbf{b)} is from MD with flexible bonds (harmonic potential using multiple-time-step algorithm RESPA \cite{tuckerman1992} algorithm), and panel \textbf{c)} is from MC with rigid bonds (GOMC). 
-Solid black lines represent $B_2+B_3 \rho+B_4 \rho^2$ curve where $B_{2-4}$ are obtained from Schultz's work \cite{Schultz2010a}. Dashed black lines represent $B_2+B_3 \rho$ line where $B_{2-3}$ are obtained from Schultz's work. Solid black circle shows the Schultz's value of $B_2$. Dashed green lines represent $B_2+B_3^\mathrm{eff}rho$ where $B_2$ and $B_3^\mathrm{eff}$ are fit to four lowest density simulation values. Note that the increasing  deviation between black line and simulation points at higher densities is due to truncation of virial equation at $B_4$. The error bars illustrate the standard deviation calculated based on four separate runs with different initial configurations.
+Solid black lines represent $B_2+B_3 \rho+B_4 \rho^2$ curve where $B_{2-4}$ are obtained from Schultz's work \cite{Schultz2010a}. Dashed black lines represent $B_2+B_3 \rho$ line where $B_{2-3}$ are obtained from Schultz's work. Solid black circle shows the Schultz's value of $B_2$. Dashed purple lines represent $B_2+B_3^\mathrm{eff}rho$ where $B_2$ and $B_3^\mathrm{eff}$ are fit to four lowest density simulation values. Note that the increasing  deviation between black line and simulation points at higher densities is due to truncation of virial equation at $B_4$. The error bars illustrate the 95 \% confidence intervals calculated from four separate runs each consisting two blocks (8 samples). Number of MD steps used to calculate averages is inversely proportional to N with 6 million timesteps for N=120.
 }
 \label{fig:FSE_TraPPE_C2_abc}
 \end{figure*}
@@ -663,7 +628,7 @@ Comparison between ITIC method and Monte Carlo methods: GEMC (TraPPE-UA \textit{
 \end{figure*}
 
 \section{Example Simulations} \label{sec:ExampleSim}
-The TraPPE-UA \cite{Martin1998,Martin1999,Wick2000}, Mie-UA \cite{Potoff2009,Mick2017,Barhaghi2017,Mick2015}, and TIP4P/2005 \cite{Abascal2005} models were chosen for the purpose of testing the ITIC method due to the availability of literature vapor-liquid coexistence simulation results. Figures ~\ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV} and \ref{fig:EXAMPLE-SIM/all} demonstrate good agreement between traditional GEMC/GCMC methods and the ITIC approach using both MC and MD.
+The TraPPE-UA \cite{Martin1998,Martin1999,Wick2000}, Mie-UA \cite{Potoff2009,Mick2017,Barhaghi2017,Mick2015}, and TIP4P/2005 \cite{Abascal2005} models were chosen for the purpose of testing the ITIC method due to the availability of literature vapor-liquid coexistence simulation results. Figures ~\ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV} and \ref{fig:EXAMPLE-SIM/all} demonstrate good agreement between traditional GEMC/GCMC methods and the ITIC approach using both MC and MD. The ITIC and literature values (GEMC/GCMC) typically agree to within less than 0.5 \% for $\rho\mathrm{liq}$ and within a few percent for $P^\mathrm{sat}$ and $\rho\mathrm{liq}$.
 
 Figure~\ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV} provides a quantitative comparison between ITIC method and traditional vapor-liquid coexistence Monte Carlo methods. In this figure deviation of ITIC and MC methods from REFPROP data are compared. Figure~\ref{fig:EXAMPLE-SIM/all} shows the Clausius-Clapeyron and coexistence curves for all example simulations compared to MC methods. In all ITIC calculations, $B_2$ is included in Eq.~(\ref{eqn:rhoV}) and Eq.~(\ref{eqn:psat}), while $B_3$ is set to zero for simplicity. Initial $T^\mathrm{sat}$ values for all the compounds shown in Figures ~\ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV} and \ref{fig:EXAMPLE-SIM/all} are obtained from DIPPR \cite{DIPPR2004} database. Complete information about chosen ITIC state points as well as the results of $NVT$ simulations is included in Supplementary Materials.
 
