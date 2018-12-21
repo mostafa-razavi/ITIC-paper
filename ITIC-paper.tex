@@ -231,7 +231,7 @@ which can be rearranged in terms of ${\rho_\mathrm{vap}}$
 \label{eqn:rhoV}
 \end{equation}
 
-Eq.~(\ref{eqn:rhoV}) can be solved for $\rho_\mathrm{vap}$ using the fixed-point iteration method \cite{Burden1985}. For simplicity, we solve this equation with the fixed-point iteration method. Finally, vapor pressure is calculated using Eq.~(\ref{eqn:psat})
+Eq.~(\ref{eqn:rhoV}) can be solved for $\rho_\mathrm{vap}$ using a root-solving approach. For simplicity, we solve Eq.~(\ref{eqn:rhoV}) with the fixed-point iteration method \cite{Burden1985}. Finally, vapor pressure is calculated using Eq.~(\ref{eqn:psat})
 
 \begin{equation}
 P^\mathrm{sat} = P_\mathrm{vap} = {Z_\mathrm{vap}}{\rho _\mathrm{vap}}RT^\mathrm{sat} = (1 + {B_2} {\rho_\mathrm{vap}} + {B_3}\rho _\mathrm{vap}^2){\rho _\mathrm{vap}}RT^\mathrm{sat} 
@@ -317,10 +317,13 @@ Having new values for $T^\mathrm{sat}$, $Z_{\mathrm{liq}}$, $\rho_\mathrm{vap}$,
 \end{figure}
 
 \subsection{ITIC state points and integration schemes}\label{sec:ITIC-state-points}
-Figure~\ref{fig:ITICpathway} provides a schematic plot of ITIC state points. The minimal number of data points on each path required to achieve reliable results is determined. In order to reach the densities of interest and maintain an acceptable accuracy of VLE data to a reduced temperature of 0.45, one needs at least 9 data points on the isotherm and three data points on the isochore for each saturation point. The highest temperature state points, however, can serve on both isochores and isotherm, hence these points are only simulated once. The isotherm is constructed at a supercritical temperature. A reduced temperature of $T_\mathrm{r} \approx 1.2$ was the default value for the isotherm. For some compounds, owing to lack of NIST REFPROP values at high temperatures and the desire to compare isochores and isotherms to NIST REFPROP values when possible, a lower reduced temperature ($T_\mathrm{r} \approx 1.05$) is chosen for the isotherm. Validations against NIST REFPROP values show that any reduced temperature from 1.05 to 1.2 led to acceptable accuracy (results not presented here).
+Figure~\ref{fig:ITICpathway} provides a schematic plot of ITIC state points. The minimal number of data points on each path required to achieve reliable results is determined. 
+%In order to reach the densities of interest and maintain an acceptable accuracy of VLE data to a reduced temperature of 0.45, one needs at least 9 data points on the isotherm and three data points on the isochore for each saturation point. 
+In order to estimate VLE data to a reduced temperature of 0.45 with precision comparable to that of GEMC and GCMC methods, one needs at least 9 data points on the isotherm and three data points on the isochore for each saturation point.
+The highest temperature state points, however, can serve on both isochores and isotherm, hence these points are only simulated once. The isotherm is constructed at a supercritical temperature. A reduced temperature of $T_\mathrm{r} \approx 1.2$ was the default value for the isotherm. For some compounds, owing to lack of NIST REFPROP values at high temperatures and the desire to compare isochores and isotherms to NIST REFPROP values when possible, a lower reduced temperature ($T_\mathrm{r} \approx 1.05$) is chosen for the isotherm. Validations against NIST REFPROP values show that any reduced temperature from 1.05 to 1.2 led to acceptable accuracy (results not presented here).
 
 
-The integrations along the isotherm and isochores are performed using Simpson's rule \cite{atkinson2008}. Eq.~(\ref{eqn:eqn18}) and Eq.~(\ref{eqn:eqn19}) are
+The integrations along the isotherm and isochores are performed using Simpson's rule \cite{atkinson2008}, due its simplicity compared with other integration schemes. Eq.~(\ref{eqn:eqn18}) and Eq.~(\ref{eqn:eqn19}) are
 articulations of Simpson's rule used for numerical integration along the isotherm and isochores to calculate $A^{\mathrm{dep}}$ by Eq.~(\ref{eqn:eqn8}).
 
 \begin{equation}
@@ -384,19 +387,34 @@ We follow the standard approach used in GEMC and GCMC methods to calculate the c
 \end{equation}
 where $\rho_\mathrm{c}$, $ T_\mathrm{c}$, $A$ and $B$ are fit to simulation data.
 
-Critical pressure ($P_\mathrm{c}$) and acentric factor ($\omega$) are calculated from Eq.(\ref{eqn:Lee-Kesler}) \cite{Lee1975} by fitting vapor pressure and saturation temperatures.
+%Critical pressure ($P_\mathrm{c}$) and acentric factor ($\omega$) are calculated from Eq.(\ref{eqn:Lee-Kesler}) \cite{Lee1975} by fitting vapor pressure and saturation temperatures.
 			
-\begin{equation}
-{\ln \frac{P}{P_\mathrm{c}}=f^{(0)}+\omega f^{(1)}} 
-\label{eqn:Lee-Kesler}
-\end{equation}
-where $f^{(0)}$ and $f^{(1)}$ terms are defined as
-\begin{equation}
-\begin{array}{l} 
-{f^{(1)} = 15.2518 - \frac{15.6875}{T_\mathrm{r}} - 13.4721 \, \ln(T_\mathrm{r}) +   0.4357 \, T_\mathrm{r}^6 } \\ 
-{ f^{(0)} = 5.9271 - \frac{6.0964}{T_\mathrm{r}} - 1.2886 \, \ln(T_\mathrm{r}) + 0.16934 \, T_\mathrm{r}^6  } 
-\end{array} \label{eqn:Lee-Kesler-terms}
-\end{equation}
+%\begin{equation}
+%{\ln \frac{P}{P_\mathrm{c}}=f^{(0)}+\omega f^{(1)}} 
+%\label{eqn:Lee-Kesler}
+%\end{equation}
+%where $f^{(0)}$ and $f^{(1)}$ terms are defined as
+%\begin{equation}
+%\begin{array}{l} 
+%{f^{(1)} = 15.2518 - \frac{15.6875}{T_\mathrm{r}} - 13.4721 \, \ln(T_\mathrm{r}) +   0.4357 \, T_\mathrm{r}^6 } \\ 
+%{ f^{(0)} = 5.9271 - \frac{6.0964}{T_\mathrm{r}} - 1.2886 \, \ln(T_\mathrm{r}) + 0.16934 \, T_\mathrm{r}^6  } 
+%\end{array} \label{eqn:Lee-Kesler-terms}
+%\end{equation}
+
+
+The critical pressure $(P_{\rm c})$ is computed in two steps. The first step is to fit the ITIC saturation temperatures $(T^{\rm sat})$ and pressures $(P^{\rm sat})$ to the Antoine equation
+\begin{equation} \label{eqn:Antoine}
+\log_{10}(P^{\rm sat}) = a_0 + \frac{a_1}{a_2 + T^{\rm sat}}
+\end{equation} 
+where $a_i$ are fitting constants and $a_1$ is constrained to be negative. The second step is to evaluate Eq.(\ref{eqn:Antoine}) with the optimal values of $a_i$ for $T^{\rm sat} = T_{\rm c}$. 
+
+Some caution should be exercised when extrapolating Eq.(\ref{eqn:rectilinearLaw}-\ref{eqn:Antoine}) as ITIC data are typically not available near the critical point. For example, we recommend excluding low temperature ITIC data ($T_{\rm r} < 0.6$) when fitting Eq.(\ref{eqn:rectilinearLaw}-\ref{eqn:Antoine}) as these equations are typically not reliable over the entire temperature range. The results in Section ~\ref{sec:ExampleSim} demonstrate that, although ITIC is generally limited to $T_{\rm r} < 0.85$, careful application of Eq.(\ref{eqn:rectilinearLaw}-\ref{eqn:Antoine}) provides reasonable estimates for all three critical constants.
+
+
+
+
+
+
 
 
 \section{ITIC Validation}\label{sec:NIST-VAL}
@@ -503,12 +521,17 @@ U^{\mathrm{dep}} = \frac{E^{\mathrm{tot}} - E^{\mathrm{bonded}} - E^{\mathrm{int
 \end{equation}
 where $E^{\mathrm{tot}}$, $E^{\mathrm{bonded}}$, and $E^{\mathrm{intra}}$ are the total potential energy, bonded energy (bond, angle, and dihedral), and intramolecular pairwise energy (coulumbic and van der Waals). Failing to subtract $E^{\mathrm{intra}}$ causes a significant error in vapor pressure. A post-processing code is required to calculate this quantity, if the molecular simulation package does not provide an internal way of estimating $E^{\mathrm{intra}}$. For example, LAMMPS simulations require this post-processing.  In this case it is necessary to output the site coordinates periodically after the simulation reaches equilibrium. 
 
-An underlying assumption of Eq.~(\ref{eqn:eqn8}) is that the intramolecular energy (ideal gas contribution) does not depend on density of the system. This assumption might not hold true for dense systems and large molecules, where the overall configuration of moleucles, hence the intramolecular non-bonded and bonded energies, is affected by closeness of the molecules. A more rigorous way of calculating ideal gas energy is to obtain the total energy from simulation of a single molecule system. 
+An underlying assumption of Eq.~(\ref{eqn:eqn8}) is that the intramolecular energy (ideal gas contribution) does not depend on density of the system. This assumption might not hold true for dense systems and large molecules, where the overall configuration of moleucles, hence the intramolecular non-bonded and bonded energies, is affected by closeness of the molecules. A more rigorous way of calculating ideal gas energy is to obtain the total energy from simulation of a single molecule system. The internal energy departure function is calculated using
+
+\begin{equation}
+U^{\mathrm{dep}} = \frac{E^{\mathrm{tot}} - N \times E^{\mathrm{single\,molecule}}}{NRT}\label{eqn:uDepFormSingle}
+\end{equation}
+where $E^\mathrm{single\,molecule}$ represents the total potential energy of the single molecule simulation. Using single molecules approach to calculate $U^\mathrm{dep}$ requires performing single molecule simulations for ITIC points on isochores. Fortunately, these simulation equilibriate very fast, so the extra simulation time incurred as a result of using this approach is not significant. A comparison between the two methods of calculating $U^{\mathrm{dep}}$ is discussed in Supplementary Material.
 
 %Todo: In Section~\ref{sec:ExampleSim}, we confirm that $U^\mathrm{dep}$ values from Eq.~(\ref{eqn:eqn8}) and single molecule approach are in agreement within their uncertainties.
 
 \subsection{Bootstrapping Method for Uncertainty Calculation}\label{sec:bootstrapping}
-Bootstrapping is used to estimate the statistical uncertainties \cite{Efron1981} in $T^\mathrm{sat}$, $P^\mathrm{sat}$, $\rho_\mathrm{vap}$, and $\Delta H_\mathrm{v}$. Note that the ITIC method determines saturation conditions at a fixed value of $\rho_{\mathrm{liq}}$ (equal to the isochoric density) and, therefore, the bootstrap uncertainty in $\rho_{\mathrm{liq}}$ is zero. Four series of independent $NVT$ simulations are performed for each compound using different random number generator seeds. Each series of $NVT$ simulations comprises 26 state points including four at $T_\mathrm{r}=0.9$ and three on isotherm used to estimate $B_2$. ITIC analysis is performed using $NVT$ state points randomly selected from the four series, and saturation properties are computed. This process is repeated 500 times resulting in 500 sample values for each saturation property. The standard deviations are then calculated from the resulting 500 ITIC outputs. 
+Bootstrapping is used to estimate the statistical uncertainties \cite{Efron1981} in $T^\mathrm{sat}$, $P^\mathrm{sat}$, $\rho_\mathrm{vap}$, and $\Delta H_\mathrm{v}$. Note that the ITIC method determines saturation conditions at a fixed value of $\rho_{\mathrm{liq}}$ (equal to the isochoric density) and, therefore, the bootstrap uncertainty in $\rho_{\mathrm{liq}}$ is zero. Four series of independent $NVT$ simulations are performed for each compound using different random number generator seeds. Each series of $NVT$ simulations comprises 26 state points including four at $T_\mathrm{r}=0.9$ and three on isotherm used to estimate $B_2$. In order to increase the number of samples, the production data in each run is divided into two blocks. The ITIC analysis is performed using $NVT$ state points randomly selected from the eight blocks, and saturation properties are computed. This process is repeated 500 times resulting in 500 sample values for each saturation property. The 95 \% confidence intervals are then calculated from the resulting 500 ITIC outputs. 
 
 The resulting uncertainties are used to generate error bars represented in Figure~\ref{fig:EXAMPLE-SIM/all}, however in most cases the error bars are smaller than the symbols. For greater clarity, uncertainties are tabulated in supplementary material for each property at each saturation condition.
 
@@ -596,7 +619,7 @@ Therefore, we recommend using MC when simulating these low density points. The c
 \subfloat[MD flexible]{\includegraphics[scale=0.22]{Figures/FSE_TraPPE-C2_Lammps-flex_IT.png}}
 \subfloat[MC rigid]{\includegraphics[scale=0.22]{Figures/FSE_TraPPE-C2_GOMC_IT.png}}
 \caption{ Effect of number of ethane molecules on compressibility factor at low densities at $T^{\mathrm{IT}}=360$. Panel \textbf{a)} is from MD with rigid bonds (using SHAKE algorithm in LAMMPS), panel \textbf{b)} is from MD with flexible bonds (harmonic potential using multiple-time-step algorithm RESPA \cite{tuckerman1992} algorithm), and panel \textbf{c)} is from MC with rigid bonds (GOMC). 
-Solid black lines represent $B_2+B_3 \rho+B_4 \rho^2$ curve where $B_{2-4}$ are obtained from Schultz's work \cite{Schultz2010a}. Dashed black lines represent $B_2+B_3 \rho$ line where $B_{2-3}$ are obtained from Schultz's work. Solid black circle shows the Schultz's value of $B_2$. Dashed purple lines represent $B_2+B_3^\mathrm{eff}rho$ where $B_2$ and $B_3^\mathrm{eff}$ are fit to four lowest density simulation values. Note that the increasing  deviation between black line and simulation points at higher densities is due to truncation of virial equation at $B_4$. The error bars illustrate the 95 \% confidence intervals calculated from four separate runs each consisting two blocks (8 samples). Number of MD steps used to calculate averages is inversely proportional to N with 6 million timesteps for N=120.
+Solid black lines represent $B_2+B_3 \rho+B_4 \rho^2$ curve where $B_{2-4}$ are obtained from Schultz's work \cite{Schultz2010a}. Dashed black lines represent $B_2+B_3 \rho$ line where $B_{2-3}$ are obtained from Schultz's work. Solid black circle shows the Schultz's value of $B_2$. Dashed purple lines represent $B_2+B_3^\mathrm{eff}\rho$ where $B_2$ and $B_3^\mathrm{eff}$ are fit to four lowest density simulation values. Note that the increasing  deviation between black line and simulation points at higher densities is due to truncation of virial equation at $B_4$. The error bars illustrate the 95 \% confidence intervals calculated from four separate runs each consisting two blocks (8 samples). Number of MD steps used to calculate averages is inversely proportional to N with 6 million timesteps for N=120.
 }
 \label{fig:FSE_TraPPE_C2_abc}
 \end{figure*}
@@ -607,10 +630,7 @@ Solid black lines represent $B_2+B_3 \rho+B_4 \rho^2$ curve where $B_{2-4}$ are 
 \subfloat[]{\includegraphics[scale=0.23]{Figures/Deviation-rhoV.png}}
 \caption{Comparison between ITIC (filled) with respect to GEMC and GCMC methods (unfilled). The y-axis represents deviation from REFPROP data. 
 GEMC: TraPPE-UA \textit{n}-dodecane  (orange) \cite{Martin1998}, TraPPE-UA ethane (cyan) \cite{Martin1998}, TraPPE-UA isobutane (purple) \cite{Wick2000};
-GCMC: TraPPE methane\cite{Shen2008} (blue), Mie-UA \textit{n}-dodecane (red) \cite{Potoff2009}, TIP4P/2005 water (green) \cite{Shen2008}, and TraPPE-UA isohexane (brown) \cite{Mick2017}. Black filled symbols represent ITIC results simulated with GROMACS \cite{Lindahl2001}. Black unfilled triangles represent TraPPE-UA \textit{n}-dodecane from Ref.~\cite{Ungerer2000}.
-%Todo: Fix deviation plots
-% -The liquid density results for MieC12 and isobutane look very bad. Is there some way to clean this up
-% -add percent deviation values between ITIC and MC for Fig 9 in discussion
+GCMC: TraPPE methane\cite{Shen2008} (blue), Mie-UA \textit{n}-dodecane (red) \cite{Potoff2009}, TIP4P/2005 water (green) \cite{Shen2008}, and TraPPE-UA isohexane (brown) \cite{Mick2017}. Black filled symbols represent ITIC results simulated with GROMACS \cite{Lindahl2001}. Black unfilled triangles represent TraPPE-UA \textit{n}-dodecane from Ref.~\cite{Ungerer2000}. $U^\mathrm{dep}$ is computed with Eq.~(\ref{eqn:uDepFormSingle}) for \textit{n}-dodecane and isohexane by performing single molecule simulations, while $U^\mathrm{dep}$ is computed with Eq.~(\ref{eqn:uDepForm}) for other compounds.
 }
 \label{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV}
 \end{figure*}
@@ -638,8 +658,6 @@ The ITIC method was also compared to histogram-reweighting GCMC provided in Figu
 
 In order to validate the ITIC method for polar molecules, the results of the ITIC method using TIP4P/2005 water simulated in Cassandra were compared against TIP4P/2005 data from the NIST Standard Reference Simulation Website \cite{Shen2008} simulated using grand-canonical Wang-Landau/Transition-matrix Monte Carlo and histogram re-weighting. Figure~ \ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV}, \ref{fig:EXAMPLE-SIM/all}(c), and \ref{fig:EXAMPLE-SIM/all}(d) show the agreement between the two methods for TIP4P/2005 water. The absolute average percent deviation between vapor pressure calculated using ITIC method and GCMC method for TIP4P/2005 water shown in Figure~ \ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV}(a) is less than 1 \%.
 
- The isothermal/isochoric plots of Helmholtz energy departure function, compressibility factor, and internal energy departure function as well as plots of second virial coefficient and heat of vaporization for all example simulations are included in supplementary material. Also included in supplementary material are tables containing ITIC results for all example simulations.
-
 Figure~\ref{fig:EXAMPLE-SIM/all} includes the critical points obtained using the method described in Section~\ref{sec:ITIC-method}. The ITIC coexistence points 
 shown in this figure do not exceed $T_\mathrm{r}^\mathrm{sat} \approx 0.85$, the estimated critical properties are subject to larger uncertainties and possible systematic deviations. In the case of TIP4P/2005 water, critical point calculation requires a more suitable method as shown in Ref.~\cite{Vega2006}.
 
@@ -649,6 +667,7 @@ One limitation of the ITIC approach is the need for a reasonable value of $T_\ma
 
 Alternatively, one can improve ITIC results by running the ITIC procedure iteratively by using $T\mathrm{sat}$ from the previous iteration. It's worth mentioning that we do not need to resimulate the isotherms, and the isochoric information from previous iterations can potentially help improve the integration accuracy along the isochores. 
 
+The isothermal/isochoric plots of Helmholtz energy departure function, compressibility factor, and internal energy departure function as well as plots of second virial coefficient and heat of vaporization for all example simulations are included in supplementary material. Also included in supplementary material are tables containing ITIC results for all example simulations.
 
 
 \begin{figure*}[]
