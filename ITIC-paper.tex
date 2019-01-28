@@ -265,8 +265,8 @@ Having new values for $T^\mathrm{sat}$, $Z_{\mathrm{liq}}$, $\rho_\mathrm{vap}$,
 
 The algorithm in Figure~2 also includes a step for obtaining second virial coefficient along isotherm ($B_2^\mathrm{IT}$) and saturation second virial coefficients ($B_2^\mathrm{sat}$) which is explained in Section~\ref{sec:VirialCalc}.
 \begin{figure}
-\includegraphics[scale=0.45]{Figures/ITIC-pathway-C2.png}
-\caption{A schematic plot of the pathways taken in the ITIC method. Squares and diamonds represent non-saturated state points obtained from simulation, while circles represent coexistence points calculated using the ITIC method. Green and purple diamonds show the state points required for $B_2$ calculation at isothermal temperature and $T_\mathrm{r}=0.9$, respectively. Note that square points 11, 13, 15, 17, and 19 represent the initial estimate of saturation temperature, therefore they do not necessarily match the coexistence curve.}
+\includegraphics[scale=0.55]{Figures/ITIC-pathway-C2-3.png}
+\caption{A schematic plot of the pathways taken in the ITIC method. Squares and diamonds represent non-saturated state points obtained from simulation, while blue filles circles represent estimated $T^\mathrm{sat}$ values. Green and purple diamonds show the state points required for $B_2$ calculation at isothermal temperature and $T_\mathrm{r}=0.9$, respectively. Note that circle points 11, 13, 15, 17, and 19 represent the initial estimate of saturation temperature, therefore they do not necessarily match the coexistence curve.}
 \label{fig:ITICpathway}
 \end{figure}
 
@@ -656,7 +656,7 @@ Solid black lines represent $B_2+B_3 \rho+B_4 \rho^2$ curve where $B_{2-4}$ are 
 \subfloat[]{\includegraphics[scale=0.23]{Figures/Deviation-rhoV.png}}
 \caption{Comparison between ITIC (filled) with respect to GEMC and GCMC methods (unfilled). The y-axis represents deviation from REFPROP data. 
 GEMC: TraPPE-UA \textit{n}-dodecane  (orange) \cite{Martin1998}, TraPPE-UA ethane (cyan) \cite{Martin1998}, TraPPE-UA isobutane (purple) \cite{Wick2000};
-GCMC: TraPPE methane\cite{Shen2008} (blue), Mie-UA \textit{n}-dodecane (red) \cite{Potoff2009}, TIP4P/2005 water (green) \cite{Shen2008}, and TraPPE-UA isohexane (brown) \cite{Mick2017}. Black filled symbols represent ITIC results simulated with GROMACS \cite{Lindahl2001}. Black unfilled triangles represent TraPPE-UA \textit{n}-dodecane from Ref.~\cite{Ungerer2000}. $U^\mathrm{dep}$ is computed with Eq.~(\ref{eqn:uDepFormSingle}) for \textit{n}-dodecane and isohexane by performing single molecule simulations, while $U^\mathrm{dep}$ is computed with Eq.~(\ref{eqn:uDepForm}) for other compounds.
+GCMC: TraPPE methane\cite{Shen2008} (blue), Mie-UA \textit{n}-dodecane (red) \cite{Potoff2009}, TIP4P/2005 water (green) \cite{Shen2008}, and TraPPE-UA isohexane (brown) \cite{Mick2017}. Black filled symbols represent ITIC results simulated with GROMACS \cite{Lindahl2001}. Black unfilled triangles represent TraPPE-UA \textit{n}-dodecane from Ref.~\cite{Ungerer2000}. $U^\mathrm{dep}$ is computed with Eq.~(\ref{eqn:uDep single molecule}) for \textit{n}-dodecane and isohexane by performing single molecule simulations, while $U^\mathrm{dep}$ is computed with Eq.~(\ref{eqn:uDepForm}) for other compounds.
 }
 \label{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV}
 \end{figure*}
@@ -674,7 +674,7 @@ Comparison between ITIC method and Monte Carlo methods: GEMC (TraPPE-UA \textit{
 \end{figure*}
 
 \section{Example Simulations} \label{sec:ExampleSim}
-The TraPPE-UA \cite{Martin1998,Martin1999,Wick2000}, Mie-UA \cite{Potoff2009,Mick2017,Barhaghi2017,Mick2015}, and TIP4P/2005 \cite{Abascal2005} models were chosen for the purpose of testing the ITIC method due to the availability of literature vapor-liquid coexistence simulation results. Figures ~\ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV} and \ref{fig:EXAMPLE-SIM/all} demonstrate good agreement between traditional GEMC/GCMC methods and the ITIC approach using both MC and MD. The ITIC and literature values (GEMC/GCMC) typically agree to within less than 0.5 \% for $\rho_{\mathrm{liq}}$ and within a few percent for $P^\mathrm{sat}$ and $\rho_{\mathrm{vap}}$.
+The TraPPE-UA \cite{Martin1998,Martin1999,Wick2000}, Mie-UA \cite{Potoff2009,Mick2017,Barhaghi2017,Mick2015}, and TIP4P/2005 \cite{Abascal2005} models were chosen for the purpose of testing the ITIC method due to the availability of literature vapor-liquid coexistence simulation results. Figures ~\ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV} and \ref{fig:EXAMPLE-SIM/all} demonstrate good agreement between traditional GEMC/GCMC methods and the ITIC approach using both MC and MD. The ITIC and literature values (GEMC/GCMC) typically agree to within less than 0.5 \% for $\rho\mathrm{liq}$ and within a few percent for $P^\mathrm{sat}$ and $\rho\mathrm{liq}$.
 
 Figure~\ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV} provides a quantitative comparison between ITIC method and traditional vapor-liquid coexistence Monte Carlo methods. This figure compares the deviations of ITIC and MC methods from REFPROP values as a baseline to make the magnitudes of the discrepancies more clear. Figure~\ref{fig:EXAMPLE-SIM/all} shows the Clausius-Clapeyron and coexistence curves for all example simulations compared to MC methods. In all ITIC calculations, $B_2$ is included in Eq.~(\ref{eqn:rhoV}) and Eq.~(\ref{eqn:psat}), while $B_3$ is set to zero for simplicity. Initial $T^\mathrm{sat}$ values for all the compounds shown in Figures ~\ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV} and \ref{fig:EXAMPLE-SIM/all} were obtained from the DIPPR \cite{DIPPR2004} database. Complete information about chosen ITIC state points as well as the results of $NVT$ simulations is included in Supplementary Materials.
 
