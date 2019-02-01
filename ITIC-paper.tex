@@ -264,7 +264,7 @@ which can be rearranged in terms of ${\rho_\mathrm{vap}}$
 \label{eqn:rhoV}
 \end{equation}
 
-Eq.~(\ref{eqn:rhoV}) can be solved for $\rho_\mathrm{vap}$ using a root-solving approach. For simplicity, we solve Eq.~(\ref{eqn:rhoV}) with the fixed-point iteration method \cite{Burden1985}. Finally, vapor pressure is calculated using Eq.~(\ref{eqn:psat})
+Assuming $\rho _{\mathrm{liq}}$, $A^\mathrm{dep}_\mathrm{liq}$, $T^\mathrm{sat}$, $B_2$, $B_3$, and $Z_{\mathrm{liq}$ are known quantities, Eq.~(\ref{eqn:rhoV}) can be solved for $\rho_\mathrm{vap}$ using a root-solving approach. For simplicity, we solve Eq.~(\ref{eqn:rhoV}) with the fixed-point iteration method \cite{Burden1985}. Finally, vapor pressure is calculated using Eq.~(\ref{eqn:psat})
 
 \begin{equation}
 \begin{array}{l}
@@ -561,7 +561,7 @@ Computing the internal energy departure function in Eq.~(\ref{eqn:AdepLiq2}) req
 \begin{equation}\label{eqn:uDep single molecule}
 U^{\mathrm{dep}} = \frac{E^{\mathrm{tot}} - N \times E^{N=1}}{NRT}
 \end{equation}
-where $E^{\mathrm{tot}}$ and $E^{N=1}$ are the total potential energy and the single molecule potential energy, respectively. We recommend Monte Carlo or stochastic dynamics to compute $E^{N=1}$. Molecular dynamics simulations with a single molecule are ill-advised when performed with standard thermostats that couple many degrees of freedom to a single bath \cite{Merz2018}. 
+where $E^{\mathrm{tot}}$ and $E^{N=1}$ are the total potential energy and the single molecule potential energy, respectively. Some caution should be exercised when computing $E^{N=1}$. For example, molecular dynamics simulations with a single molecule are ill-advised when performed with standard thermostats that couple many degrees of freedom to a single bath \cite{Merz2018}. For this purpose, we recommend using either chains of thermostats, Monte Carlo simulations, or stochastic (Langevin) dynamics \cite{Goga2012Langevin} to compute $E^{N=1}$.
 
 The additional single molecule simulations equilibrate very quickly, such that the extra CPU time incurred to compute $E^{N=1}$ is not significant. However, a slightly simpler approach is to assume that $U_{\mathrm{ig}}$ is approximately equal to the intramolecular energy at the isochoric state point, such that
 \begin{equation}
