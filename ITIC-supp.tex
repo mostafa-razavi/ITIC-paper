@@ -712,11 +712,11 @@ ITIC results of TraPPE-UA 1-phenanthrenyl, 4-naphthalenyl butane (GOMC)
 $T^{\mathrm{sat}}$ & $\pm$ & $P^{\mathrm{sat}}$ & $\pm$ & $\rho_{\mathrm{liq}}$ & $\rho_{\mathrm{vap}}$ & $\pm$ & $\Delta H_{\mathrm{v}}$ & $\pm$
  \\
 \hline		
-0.82	&	899.59	&	1.34	&	0.285250	&	0.0052458	&	0.7143	&	0.0156	&	0.0003	&	71.574	&	0.069	\\
-0.74	&	809.90	&	0.95	&	0.078499	&	0.0012044	&	0.7857	&	0.0044	&	0.0001	&	82.465	&	0.066	\\
-0.65	&	717.69	&	1.57	&	0.014430	&	0.0005009	&	0.8571	&	0.0009	&	0.00003	&	92.112	&	0.099	\\
-0.55	&	608.31	&	1.37	&	0.000670	&	0.0000297	&	0.9286	&	0.00005	&	0.000002	&	103.510	&	0.043	\\
-0.45	&	493.44	&	0.55	&	0.000004	&	0.0000002	&	1.0000	&	0.0000004	&	0.00000001	&	114.680	&	0.062	\\
+899.59	&	1.34	&	0.285250	&	0.0052458	&	0.7143	&	0.0156	&	0.0003	&	71.574	&	0.069	\\
+809.90	&	0.95	&	0.078499	&	0.0012044	&	0.7857	&	0.0044	&	0.0001	&	82.465	&	0.066	\\
+717.69	&	1.57	&	0.014430	&	0.0005009	&	0.8571	&	0.0009	&	0.00003	&	92.112	&	0.099	\\
+608.31	&	1.37	&	0.000670	&	0.0000297	&	0.9286	&	0.00005	&	0.000002	&	103.510	&	0.043	\\
+493.44	&	0.55	&	0.000004	&	0.0000002	&	1.0000	&	0.0000004	&	0.00000001	&	114.680	&	0.062	\\
 \end{tabular}
 \end{ruledtabular}
 \end{table*}
@@ -909,7 +909,7 @@ TraPPE-UA isobutane (Gromacs)
 \subfloat{\includegraphics[scale=0.25]{Figures/Ex_Sim_TraPPE-1p4nB_b2.png}}\label{ee}
 \subfloat{\includegraphics[scale=0.25]{Figures/Ex_Sim_TraPPE-1p4nB_hvap.png}}\label{ff}
 \caption{
-TraPPE-UA 1-naphthalenyl,4-phenanthrenyl butane (GOMC). Linear extrapolation of red (X) symbols in $Z$ vs. $1000/T$ plot were used to obtain initial $T^\mathrm{sat}$ values at each isochore.
+TraPPE-UA 1-naphthalenyl,4-phenanthrenyl butane (GOMC). Linear extrapolation of black (X) symbols in $Z$ vs. $1000/T$ plot were used to obtain initial $T^\mathrm{sat}_\mathrm{est }$ values at each isochore.
 }
 \label{fig:Ex_Sim_TraPPE-1p4nB}
 \end{figure*}
@@ -1023,7 +1023,7 @@ In Section~3, the sensitivity of the ITIC method to $T^\mathrm{sat}_\mathrm{est}
 \centering
 \includegraphics[scale=0.3]{Figures/Z-contributions.png}
 \caption{
-Virial contributions to compressibility factor for harmonic bond TraPPE-UA ethane (N=3200). The intermolecular contribution to the virial (pair) is approaching zero as expected, but the bonded contribution deviates significantly from its steady approach to -1 as the density approaches zero. The discrepancy is magnified in the computation of $(Z-1)/\rho$ owing to the division by density. The bonded contribution to the virial is a quantity reported by LAMMPS with little recourse for user intervention. Presumably, the problem is the small number of intermolecular collisions at low density relative to the large number of intramolecular collisions, inhibiting the proper sampling of the various components of momentum. To illustrate one manner of correcting for this deficiency, we used a linear extrapolation of the intramolecular virial (bond), enforcing a value of -1 at zero density. Then we corrected the total virial (pair+bond). This procedure reduces the problem, but requires considerably more effort than switching to fixed bond lengths. Note that the kinetic contribution to compressibility factor for this system (not shown in the figure) has a constant value of 2 at all densities, therefore the total Z approaches 1 at zero density.
+Virial contributions to compressibility factor for harmonic bond TraPPE-UA ethane (N=3200). Note that the kinetic contribution to compressibility factor for the system (not shown in the figure) has a constant value of 2 at all densities and the total Z should approach 1 at zero density. The intermolecular contribution to the virial (pair) is approaching zero as expected, but the bonded contribution deviates significantly from its steady approach to -1 as the density approaches zero. The discrepancy is magnified in the computation of $(Z-1)/\rho$ owing to the division by density. The bonded contribution to the virial is a quantity reported by LAMMPS with little recourse for user intervention. Presumably, the problem is the small number of intermolecular collisions at low density relative to the large number of intramolecular collisions, inhibiting the proper sampling of the various components of momentum. To illustrate one manner of correcting for this deficiency, we used a linear extrapolation of the intramolecular virial (bond), enforcing a value of -1 at zero density. Then we corrected the total virial (pair+bond). This procedure reduces the problem, but requires considerably more effort than switching to fixed bond lengths.
 }
 \label{fig:Z-contributions}
 \end{figure*}
@@ -1057,7 +1057,7 @@ The improvement with the single molecule method is most evident for the Mie-C12 
 
 It is also important that the difference between the single molecule method and the $U^\mathrm{intra}$ method for TraPPE-C12 is of a similar magnitude as the difference between GEMC and GEMC+Gibbs Duhem from the literature. Therefore, the deviations introduced by our original assumption are still less than the statistical uncertainty in the simulation data.
 
-In brief, the single molecule method is clearly the most rigorous approach. However, the $U^\mathrm{intra}$ method is not obsolete as it has some benefits for smaller molecules compared to the single molecule method. For example, although the additional single molecule simulations are extremely fast, this adds to the complexity of the ITIC method. Furthermore, single molecule simulations are ill-suited for traditional molecular dynamics simulations where a thermostat couples many degrees of freedom to a single bath, e.g., Nos{\'e}-Hoover, although multiple Nose{\'e}-Hoover chains are typically sufficient to obtain reliable results. Stochastic or velocity Langevin dynamics (which is available in some molecular dynamics packages, e.g., GROMACS and LAMMPS) is better suited for single molecule simulations, but this again adds complexity that is not needed for smaller molecules. 
+In brief, the single molecule method is clearly the most rigorous approach. However, the $U^\mathrm{intra}$ method is not obsolete as it has some benefits for smaller molecules compared to the single molecule method. For example, although the additional single molecule simulations are extremely fast, this adds to the complexity of the ITIC method. Furthermore, single molecule simulations are ill-suited for traditional molecular dynamics simulations where a thermostat couples many degrees of freedom to a single bath, e.g., Nos{\'e}-Hoover, although multiple Nos{\'e}-Hoover chains are typically sufficient to obtain reliable results. Stochastic or velocity Langevin dynamics (which is available in some molecular dynamics packages, e.g., GROMACS and LAMMPS) is better suited for single molecule simulations, but this again adds complexity that is not needed for smaller molecules. 
  
 \begin{figure*}
 \centering
