@@ -742,6 +742,34 @@ $T^{\mathrm{sat}}$  & $P^{\mathrm{sat}}$ & $\pm$ & $\rho_{\mathrm{liq}}$ & $\pm$
 \end{ruledtabular}
 \end{table*}
 
+\begin{table*}[]
+\centering
+\caption{
+GCMC results of TraPPE-UA 1-phenanthrenyl, 4-naphthalenyl butane (GOMC)
+}
+\label{tab:TraPPE-1p4nB-GOMC-GCMC}
+\begin{tabular}{cccc}
+\hline		
+$[\mathrm{K}]$ & $[\mathrm{MPa}]$ & $[\mathrm{g/cm^3}]$ & $[\mathrm{g/cm^3}]$  \\
+$T^{\mathrm{sat}}$  & $P^{\mathrm{sat}}$ & $\rho_{\mathrm{liq}}$ & $\rho_{\mathrm{vap}}$ \\
+\hline		
+830.0	&	0.11334	&	0.7736	&	0.0063	\\
+850.0	&	0.15162	&	0.7551	&	0.0084	\\
+870.0	&	0.19943	&	0.7388	&	0.0110	\\
+890.0	&	0.25840	&	0.7214	&	0.0143	\\
+910.0	&	0.33017	&	0.7018	&	0.0183	\\
+930.0	&	0.41636	&	0.6807	&	0.0232	\\
+950.0	&	0.51882	&	0.6596	&	0.0293	\\
+970.0	&	0.63975	&	0.6386	&	0.0367	\\
+990.0	&	0.78167	&	0.6156	&	0.0461	\\
+1010.0	&	0.94714	&	0.5888	&	0.0581	\\
+1030.0	&	1.13926	&	0.5573	&	0.0742	\\
+1050.0	&	1.36177	&	0.5203	&	0.0958	\\
+1070.0	&	1.61715	&	0.4793	&	0.1228	\\
+\hline		
+\end{tabular}
+\end{table*}
+
 \clearpage
 \section{Figures of Example Simulations}
 
@@ -1019,14 +1047,14 @@ In Section~3, the sensitivity of the ITIC method to $T^\mathrm{sat}_\mathrm{est}
 %\end{tabular}
 %\end{table*}
 
-\begin{figure*}
-\centering
-\includegraphics[scale=0.3]{Figures/Z-contributions.png}
-\caption{
-Virial contributions to compressibility factor for harmonic bond TraPPE-UA ethane (N=3200). Note that the kinetic contribution to compressibility factor for the system (not shown in the figure) has a constant value of 2 at all densities and the total Z should approach 1 at zero density. The intermolecular contribution to the virial (pair) is approaching zero as expected, but the bonded contribution deviates significantly from its steady approach to -1 as the density approaches zero. The discrepancy is magnified in the computation of $(Z-1)/\rho$ owing to the division by density. The bonded contribution to the virial is a quantity reported by LAMMPS with little recourse for user intervention. Presumably, the problem is the small number of intermolecular collisions at low density relative to the large number of intramolecular collisions, inhibiting the proper sampling of the various components of momentum. To illustrate one manner of correcting for this deficiency, we used a linear extrapolation of the intramolecular virial (bond), enforcing a value of -1 at zero density. Then we corrected the total virial (pair+bond). This procedure reduces the problem, but requires considerably more effort than switching to fixed bond lengths.
-}
-\label{fig:Z-contributions}
-\end{figure*}
+%\begin{figure*}
+%\centering
+%\includegraphics[scale=0.3]{Figures/Z-contributions.png}
+%\caption{
+%Virial contributions to compressibility factor for harmonic bond TraPPE-UA ethane (N=3200). Note that the kinetic contribution to compressibility factor for the system (not shown in the figure) has a constant value of 2 at all densities and the total Z should approach 1 at zero density. The intermolecular contribution to the virial (pair) is approaching zero as expected, but the bonded contribution deviates significantly from its steady approach to -1 as the density approaches zero. The discrepancy is magnified in the computation of $(Z-1)/\rho$ owing to the division by density. The bonded contribution to the virial is a quantity reported by LAMMPS with little recourse for user intervention. Presumably, the problem is the small number of intermolecular collisions at low density relative to the large number of intramolecular collisions, inhibiting the proper sampling of the various components of momentum. To illustrate one manner of correcting for this deficiency, we used a linear extrapolation of the intramolecular virial (bond), enforcing a value of -1 at zero density. Then we corrected the total virial (pair+bond). This procedure reduces the problem, but requires considerably more effort than switching to fixed bond lengths.
+%}
+%\label{fig:Z-contributions}
+%\end{figure*}
 
 \begin{figure*}[]
 \centering
