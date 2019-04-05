@@ -8,6 +8,7 @@
 \usepackage{bm}
 %\usepackage[mathlines]{lineno}
 %\linenumbers\relax
+\usepackage{amsmath}
 
 \usepackage{xr-hyper}
 %\externaldocument{ITIC-supp}
@@ -122,19 +123,13 @@ As another advantage, vapor pressure calculation using molecular dynamics (MD) i
 The presentation is initiated in Section~\ref{sec:ITIC-method} with a review of the thermodynamics underlying the integration method and some practical implementation aspects. The approach is validated in Section~\ref{sec:NIST-VAL} by applying it to coexistence data available from the National Institute of Standards and Technology (NIST). Section~\ref{sec:SimDetail} describes the details of simulations that are found in Sections~\ref{sec:VirialCalc}-\ref{sec:ExampleSim}. Section~\ref{sec:VirialCalc} provides recommendations for the most convenient and effective methods for characterizing the virial coefficients by molecular simulation. Section~\ref{sec:FSE} investigates the impact of system size, fixed or flexible bonds, and Monte Carlo or molecular dynamics when simulating at low densities. Section~\ref{sec:ExampleSim} demonstrates applications to molecular simulations and comparison between the ITIC method and other methods of phase coexistence calculation. Finally, Section~\ref{sec:conclusion} summarizes the conclusions from this work.
 
 \section{The Isothermal-Isochoric Integration Method} \label{sec:ITIC-method}
-\subsection{Free energy departure function derivation}
+\subsection{Derivation of the vapor pressure and density formulas}
 In this section, the dimensionless departure functions defined below are used to represent different forms of energy
 
 \begin{equation}
-\begingroup
-\large
 \begin{array}{l}
 {
-G^\mathrm{dep}(T,P)=  \frac{\left[G(T,P)-G_\mathrm{ig}(T,P)\right]_\mathrm{T,P}}{RT} 
-}
-\\
-{
-A^\mathrm{dep}(T,\rho)=  \frac{\left[A(T,\rho)-A_\mathrm{ig}(T,\rho)\right]_\mathrm{T,\rho}}{RT} 
+A^\mathrm{dep}(T,\rho)=  \frac{A(T,\rho)-A_\mathrm{ig}(T,\rho)}{RT} 
 }
 \\
 {
@@ -145,10 +140,9 @@ U^\mathrm{dep}(T,\rho)=  \frac{ U(T,\rho)-U_\mathrm{ig}(T,\rho)}{RT}
 H^\mathrm{dep}(T,\rho)=  \frac{ H(T,\rho)-H_\mathrm{ig}(T,\rho)}{RT} 
 }
 \end{array} 
-\endgroup
 \label{eqn:DepDefinition}
 \end{equation}
-where $T$, $\rho$, $P$, and $R$ are temperature, density, pressure, and the gas constant ($8.3144598\,\mathrm{J/(mol\,K)}$), respectively. $G^\mathrm{dep}$, $A^\mathrm{dep}$, and $U^\mathrm{dep}$ represent the Gibbs free energy, Helmholtz free energy, and internal energy departure functions. The subscript ``ig" denotes the ideal gas and the subscripts $T$, $P$, and $\rho$ indicates that these quantities are fixed when defining the departure function, e.g. subscript ``$T,\rho$" means the ideal gas and the real fluid have the same temperature and density. $U^\mathrm{dep}$ and $H^\mathrm{dep}$ requires no subscript because it is the same whether evaluated at $P$ or $\rho$.
+where $T$, $\rho$, $P$, and $R$ are temperature, density, pressure, and the gas constant ($8.3144598\,\mathrm{J/(mol\,K)}$), respectively. $A^\mathrm{dep}$, $U^\mathrm{dep}$, and $H^\mathrm{dep}$ represent Helmholtz energy, internal energy, and enthalpy departure functions, respectively. The subscript ``ig" denotes the ideal gas.
 
 For a single component system, Eq.~(\ref{eqn:PhaseEquilbriumCriterion}) must be satisfied at vapor-liquid phase equilibrium
 \begin{equation}
@@ -159,106 +153,130 @@ For a single component system, Eq.~(\ref{eqn:PhaseEquilbriumCriterion}) must be 
 \end{array} 
 \label{eqn:PhaseEquilbriumCriterion}
 \end{equation}
-where and subscripts ``vap" and ``liq" denote the vapor and liquid phases, respectively. 
+where $G$ represents Gibbs energy and subscripts ``vap" and ``liq" denote the saturated vapor and liquid phases, respectively.  The Gibbs energy criterion of phase equilibrium can be written in terms of Helmholtz energy
 
-
-The Gibbs energy criterion of phase equilibrium can be rewritten in dimensionless departure function form
-
-%\begin{equation}
-%\frac{ \left(G_\mathrm{liq} -G_\mathrm{ig} \right)_{T,P} }{ RT^\mathrm{sat} } =\frac{ \left(G_\mathrm{vap} -G_\mathrm{ig} \right)_{T,P} }{ RT^\mathrm{sat} } 
-%\label{eqn:eqn9}
-%\end{equation}
 
 \begin{equation}
-G^\mathrm{dep}(T_\mathrm{liq},P_\mathrm{liq})
-= 
-G^\mathrm{dep}(T_\mathrm{vap},P_\mathrm{vap})
-\label{eqn:GdepCriteria}
+\frac{A_\mathrm{liq}}{RT_\mathrm{liq}} + \frac{P_\mathrm{liq}V_\mathrm{liq}}{RT_\mathrm{liq}}=\frac{A_\mathrm{vap}}{RT_\mathrm{vap}} + \frac{P_\mathrm{vap}V_\mathrm{vap}}{RT_\mathrm{vap}}
+\label{eqn:ACriterion}
 \end{equation}
-which can be rearranged in terms of dimensionless Helmholtz energy ($A^\mathrm{dep}$) departure function 
+where $V$ represents volume. This equation which is derived based on the fundamental relationship between Gibbs and Helmholtz energies ($G \equiv A+PV$) can be simplified as 
+
 \begin{equation}
-A^\mathrm{dep}_\mathrm{liq} + Z_\mathrm{liq}-1 - \ln(Z_\mathrm{liq})
-= 
-A^\mathrm{dep}_\mathrm{vap} + Z_\mathrm{vap}-1 - \ln(Z_\mathrm{vap})
-\label{eqn:AdelCriteria}
+\frac{A_\mathrm{liq}}{RT^\mathrm{sat}} - \frac{A_\mathrm{vap}}{RT^\mathrm{sat}} = Z_\mathrm{vap} - Z_\mathrm{liq} 
+\label{eqn:ACriterion-simple}
 \end{equation}
-where $A^\mathrm{dep}_\mathrm{liq}=A^\mathrm{dep}(T^\mathrm{sat},\rho_\mathrm{liq})$, $A^\mathrm{dep}_\mathrm{vap}=A^\mathrm{dep}(T^\mathrm{sat},\rho_\mathrm{vap})$, $Z_\mathrm{liq} = Z(T^\mathrm{sat},\rho_\mathrm{liq})$, and $Z_\mathrm{vap} = Z(T^\mathrm{sat},\rho_\mathrm{vap})$.
+where $T^\mathrm{sat}$ and $Z$ represent saturation temperature and compressibility factor, respectively, and $A_\mathrm{liq}=A(T^\mathrm{sat},\rho_\mathrm{liq})$, $A_\mathrm{vap}=A(T^\mathrm{sat},\rho_\mathrm{vap})$. Calculating the vapor-liquid phase equilibrium requires solvig Eq~(\ref{eqn:ACriterion-simple}).
 
-In Eq.~(\ref{eqn:AdelCriteria}) $Z$ represents the compressibility factor ($Z=P/\rho RT$) and $\ln(Z)$ terms are introduced when converting Gibbs energy departure function at fixed $T,P$ in Eq.~(\ref{eqn:GdepCriteria}) to Helmholtz energy departure function at fixed $T,\rho$ in Eq.~(\ref{eqn:AdelCriteria}) \cite{Elliott1999}. 
+Determining the left-hand side of Eq~(\ref{eqn:ACriterion-simple}) involves connecting the liquid phase to vapor phase, however this pathway cannot pass through the two-phase region. Since $A$ is a state function, in order to avoid the two-phase region the following path is taken: 1) The temperature of the liquid is increased to a supercritical temperature ($T^\mathrm{IT}$). 2) The density of the supercritical fluid ($\rho_\mathrm{liq}$) is decreased to zero. 3) The temperature of the resulting supercritical fluid is decreased back to saturation temperature. 4) The density is increased from zero to the density of the vapor phase ($\rho_\mathrm{liq}$).\\
 
-Calculating Helmholtz energy departure functions in Eq.~(\ref{eqn:AdelCriteria}) requires connecting the state of interest to the reference state that is ideal gas at saturation temperature. In the ITIC integration method the states of interest (saturated liquid and vapor) are connected to the reference state (ideal gas at saturation temperature) through isochoric and/or isothermal pathways. Several separate simulations in the canonical ensemble ($NVT$) are needed to construct these paths (see Section~\ref{sec:ITIC-state-points}). 
+$(T^\mathrm{sat},\rho_\mathrm{liq}) \xrightarrow{\text{1}} (T^\mathrm{IT},\rho_\mathrm{liq}) \xrightarrow{\text{2}} (T^\mathrm{IT},0) \xrightarrow{\text{3}} (T^\mathrm{sat},0) \xrightarrow{\text{4}} (T^\mathrm{sat},\rho_\mathrm{vap})$ \\
 
-The Helmholtz energy change along an isochoric pathway is calculated by using Eq.~(\ref{eqn:DeltaA-IC}) \cite{Elliott1999}.
+Hence, the alternative pathway includes two isothermal and two isochoric paths. In the ITIC method, several separate simulations in the canonical ensemble (NVT) are needed to construct the first three paths (see Section~\ref{sec:ITIC-state-points}), and the fourth path is characterized by virial coefficient expansion (see Section~\ref{sec:VirialCalc}).
+
+The Helmholtz energy change along an isochoric path is calculated by using Eq.~(\ref{eqn:DeltaA-IC}) \cite{Elliott1999}.
 
 \begin{equation}
  \frac{A(T_2,\rho)}{RT_2} -  \frac{A(T_1,\rho)}{RT_1}  = \int _{T_1}^{T_2} \frac{U(T,\rho)}{R}  d\left(\frac{1}{T}\right)
 \label{eqn:DeltaA-IC}
 \end{equation}
-where $\rho$ represents the density of the isochore.
-
-%The Helmholtz energy change along an isothermal pathway with the ideal gas as starting point is calculated using
-
-%\begin{equation}
-%\frac{A(T,\rho_2)}{RT} -  \frac{A(T,\rho_1)}{RT}  = \int _{\rho_1}^{\rho_2} \frac{Z(T,\rho)-1}{\rho}  d\rho
-%\label{eqn:DeltaA-IT}
-%\end{equation}
-%where $\rho_1=0$ and $T$ represents the isotherm temperature. Note that Eq.(\ref{eqn:DeltaA-IT}) represents $A^\mathrm{dep}(T,\rho_2)$ if $\rho_1=0$.
-
-
-The Helmholtz energy departure function change along an isothermal pathway is calculated using
+where $\rho$ represents the density of the isochore. The Helmholtz energy change along an isothermal path is calculated using
 
 \begin{equation}
-A^\mathrm{dep}(T,\rho_2) -  A^\mathrm{dep}(T,\rho_1)  = \int _{\rho_1}^{\rho_2} \frac{Z(T,\rho)-1}{\rho}  d\rho
+\frac{A(T,\rho_2)}{RT} -  \frac{A(T,\rho_1)}{RT}  = \int _{\rho_1}^{\rho_2} \frac{Z(T,\rho)}{\rho}  d\rho
 \label{eqn:DeltaA-IT}
 \end{equation}
-Note that in the most common application of Eq.(\ref{eqn:DeltaA-IT}) in the ITIC method, the initial point of isotherm has a zero density ($\rho_1 = 0$). Therefore, since Helmholtz energy at zero density equals zero, the left hand side can be written as $A^\mathrm{dep}(T,\rho_2)$.
-
-
-Saturated vapor is connected through one isothermal path to ideal gas at saturation temperature. Because the density of vapor phase is low at most conditions of interest, the value for $Z_{\mathrm{vap}}$ in Eq.~(\ref{eqn:AdelCriteria}) can be approximated using a virial expansion truncated at the $B_3$ term
+where $T$ represents the isotherm temperature. Using Eq.~(\ref{eqn:DeltaA-IC}) and Eq.~(\ref{eqn:DeltaA-IT}), the Helmholtz energy change along the four paths mentioned above are derived as follows, respectively.
 
 \begin{equation}
-{Z_{\mathrm{vap}}} = 1 + {B_2}{\rho_{\mathrm{vap}}} + {B_3}\rho_{\mathrm{vap}}^2
-\label{eqn:eqn11}
+\frac{A(T^\mathrm{sat},\rho_\mathrm{liq})}{RT^\mathrm{sat}}
+-
+\frac{A(T^\mathrm{IT},\rho_\mathrm{liq})}{RT^\mathrm{IT}}
+=
+\int _{T^\mathrm{IT}}^{T^\mathrm{sat}} \frac{U(T,\rho_\mathrm{liq})}{R}  d\left(\frac{1}{T}\right)
+\label{eqn:path1}
 \end{equation}
-which is substituted in Eq.~(\ref{eqn:DeltaA-IT}) to obtain
+
+
+\begin{equation}
+\frac{A(T^\mathrm{IT},\rho_\mathrm{liq})}{RT^\mathrm{IT}}
+-
+\frac{A(T^\mathrm{IT},0)}{RT^\mathrm{IT}}
+=
+\int _{0}^{\rho_\mathrm{liq}} \frac{Z(T^\mathrm{IT},\rho)}{\rho}  d\rho
+\label{eqn:path2}
+\end{equation}
+
+\begin{equation}
+\frac{A(T^\mathrm{IT},0)}{RT^\mathrm{IT}}
+-
+\frac{A(T^\mathrm{sat},0)}{RT^\mathrm{sat}}
+=
+\int _{T^\mathrm{sat}}^{T^\mathrm{IT}} \frac{U(T,0)}{R}  d\left(\frac{1}{T}\right)
+\label{eqn:path3}
+\end{equation}
+
+\begin{equation}
+\frac{A(T^\mathrm{sat},0)}{RT^\mathrm{sat}}
+-
+\frac{A(T^\mathrm{sat},\rho_\mathrm{vap})}{RT^\mathrm{sat}}
+=
+\int _{\rho_\mathrm{vap}}^{0} \frac{Z(T^\mathrm{sat},\rho)}{\rho}  d\rho
+\label{eqn:path4}
+\end{equation}
+Adding Eq.~(\ref{eqn:path1}-\ref{eqn:path4}) results in the following equation, noting that the left-hand side of Eq.~(\ref{eqn:ACriterion-simple}) can be written as the summation of the left-hand sides of Eq.~(\ref{eqn:path1}-\ref{eqn:path4}). 
 
 \begin{equation}
 \begin{array}{l}
-{A^\mathrm{dep}_\mathrm{vap}} =  {B_2}{\rho _{\mathrm{vap}}} + \frac{1}{2}{B_3}\rho _{\mathrm{vap}}^2
-\\ 
-\end{array} 
-\label{eqn:eqn12}
+\int _{T^\mathrm{IT}}^{T^\mathrm{sat}} \frac{U(T,\rho_\mathrm{liq})}{R}  d\left(\frac{1}{T}\right)+
+\int _{T^\mathrm{sat}}^{T^\mathrm{IT}} \frac{U(T,0)}{R}  d\left(\frac{1}{T}\right)+
+\\
+\int _{0}^{\rho_\mathrm{liq}} \frac{Z(T^\mathrm{IT},\rho)}{\rho}  d\rho + \int _{\rho_\mathrm{vap}}^{0} \frac{Z(T^\mathrm{sat},\rho)}{\rho}  d\rho=Z_\mathrm{vap} - Z_\mathrm{liq} 
+\end{array}
+\label{eqn:paths1-4}
 \end{equation}
-where $B_2$ and $B_3$ are second and third virial coefficients at saturation temperature.
 
-On the liquid side, the pathway from saturated liquid to ideal gas cannot be constructed using a single isotherm. Instead, in order to avoid the two phase region, the saturated liquid is connected to a supercritical fluid ($T^\mathrm{IT} \approx 1.2 T_{c}$) along an isochoric path, the density of the supercritical state is decreased to zero along an isotherm, and, finally, the ideal gas at supercritical temperature is connected to an ideal gas at the saturation temperature along another isochore.
- 
+Since the integrands ($\frac{Z}{\rho}$) in Eq.~(\ref{eqn:path2}) and Eq.~(\ref{eqn:path4}) are infinity at $\rho=0$, using these two equations is not practical. A workaround for this problem is to obtain the ideal gas equivalents of Eq.~(\ref{eqn:path2}) and Eq.~(\ref{eqn:path4}) as follows
+
+\begin{equation}
+\frac{A_\mathrm{ig}(T^\mathrm{IT},\rho_\mathrm{liq})}{RT^\mathrm{IT}}
+-
+\frac{A_\mathrm{ig}(T^\mathrm{IT},0)}{RT^\mathrm{IT}}
+=
+\int _{0}^{\rho_\mathrm{liq}} \frac{1}{\rho}  d\rho
+\label{eqn:path2-ig}
+\end{equation}
+
+\begin{equation}
+\frac{A_\mathrm{ig}(T^\mathrm{sat},0)}{RT^\mathrm{sat}}
+-
+\frac{A_\mathrm{ig}(T^\mathrm{sat},\rho_\mathrm{vap})}{RT^\mathrm{sat}}
+=
+\int _{\rho_\mathrm{vap}}^{0} \frac{1}{\rho}  d\rho
+\label{eqn:path4-ig}
+\end{equation} 
+noting that $Z_\mathrm{ig}=1$. Eq.~(\ref{eqn:path2-ig}-\ref{eqn:path4-ig}) are then added to and subtracted from Eq.~(\ref{eqn:paths1-4}) to obtain
+
+%with the desirable $\frac{Z-1}{\rho}$ format from which we subtract Eq.~(\ref{eqn:path2-ig}-\ref{eqn:path4-ig}) to cancel out the effect of adding them. Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) provides the result of these additions
+
+\begin{equation}
+\begin{array}{l}
+\int _{T^\mathrm{IT}}^{T^\mathrm{sat}} \frac{U(T,\rho_\mathrm{liq})-U_\mathrm{ig}(T,\rho_\mathrm{liq})}{R}  d\left(\frac{1}{T}\right)+\int _{0}^{\rho_\mathrm{liq}} \frac{Z(T^\mathrm{IT},\rho)-1}{\rho}  d\rho 
+\\
++\int _{\rho_\mathrm{vap}}^{0} \frac{Z(T^\mathrm{sat},\rho)-1}{\rho}  d\rho+ \int _{\rho_\mathrm{vap}}^{\rho_\mathrm{liq}} \frac{1}{\rho}  d\rho =Z_\mathrm{vap} - Z_\mathrm{liq} 
+\end{array}
+\label{eqn:5Integrals=Zvap-Zliq}
+\end{equation}
+where $U_\mathrm{ig}(T,\rho_\mathrm{liq})=U(T,0)$. The main advantage of this equation over Eq.~(\ref{eqn:paths1-4}) is that the integrands of isothermal integrals have the $\frac{(Z-1)}{\rho}$ form with a finite value at $\rho=0$.  In addition, the last integral of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) which appeared as a result of adding right-hand sides of Eq.~(\ref{eqn:path2-ig}-\ref{eqn:path4-ig}) has non-zero limits.
+
+The first two integrals of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) represent the Helmholtz energy departure of the liquid phase ($A^\mathrm{dep}_\mathrm{liq}$)
+
 \begin{equation}
 \begingroup
 \large
 \begin{array}{l}
- 
-A^\mathrm{dep}_\mathrm{liq}
-=
-\int _{T^{\mathrm{IT}}}^{T^{\mathrm{\mathrm{sat}}}
-} \left.\frac{U}{R} \right\vert_{\rho={\rho_\mathrm{liq}}} \mathrm{d} \left(\frac{1}{T} \right)
-\\ 
-+ \int _{0}^{\rho _{\mathrm{liq}} } \left.\frac{Z-1}{\rho }\right\vert_{T=T^{\mathrm{IT}}} \mathrm{d}\rho + \int _{T^{\mathrm{sat}}}^{T^{\mathrm{\mathrm{IT}}}
-} \left. \frac{U}{R} \right\vert_{\rho=0} \mathrm{d} \left(\frac{1}{T} \right) 
-\end{array} 
-\endgroup
-\label{eqn:AdepLiq1}
-\end{equation}
-
-Because the last integral is evaluated at zero density, the integrand corresponds to the ideal gas internal energy ($U_\mathrm{ig}$). Therefore, Eq.~(\ref{eqn:AdepLiq1}) can be written as
-
-
-\begin{equation}
-\begingroup
-\large
-\begin{array}{l}
-A^\mathrm{dep}_\mathrm{liq}
-=
+A^\mathrm{dep}_\mathrm{liq} = \frac{A(T^\mathrm{sat},\rho_\mathrm{liq})}{RT^\mathrm{sat}} - \frac{A_\mathrm{ig}(T^\mathrm{sat},\rho_\mathrm{liq})}{RT^\mathrm{sat}}
+= 
 \\
 \int _{T^{\mathrm{IT}}}^{T^{\mathrm{\mathrm{sat}}}
 } \left. \frac{U-U_\mathrm{ig}}{R} \right\vert_{\rho=\rho_{\mathrm{liq}}} \mathrm{d} \left(\frac{1}{T} \right) + \int _{0}^{\rho _{\mathrm{liq}} } \left. \frac{Z-1}{\rho } \right\vert_{T=T^{\mathrm{IT}}} \mathrm{d}\rho   
@@ -266,26 +284,35 @@ A^\mathrm{dep}_\mathrm{liq}
 \endgroup
 \label{eqn:AdepLiq2}
 \end{equation}
+that can be derived by adding Eq.~(\ref{eqn:path1}-\ref{eqn:path3}) and subtracting Eq.~(\ref{eqn:path2-ig}) evaluated at $T^\mathrm{sat}$, noting that $A(T,0)=A_\mathrm{ig}(T,0)$. The above two integrals are calculated numerically by using NVT simulation data (see Section~\ref{sec:ITIC-state-points}).
 
-\subsection{Vapor pressure and density calculation}
-We have characterized the Helmholtz energy departure function in vapor and liquid phases. Substituting Eqs.~(\ref{eqn:eqn11}-\ref{eqn:eqn12}) in Eq.~(\ref{eqn:AdelCriteria}) yields
+Since the density of the vapor phase is low at most conditions of interest, the value for $Z_{\mathrm{vap}}$ in Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) can be approximated using a virial expansion truncated at the $B_3$ term
 
+\begin{equation}
+{Z_{\mathrm{vap}}} = 1 + {B_2}{\rho_{\mathrm{vap}}} + {B_3}\rho_{\mathrm{vap}}^2
+\label{eqn:Zvap}
+\end{equation}
+which is substituted in the third integral of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) to obtain
+
+\begin{equation}
+\int _{\rho_\mathrm{vap}}^{0} \frac{Z(T^\mathrm{sat},\rho)-1}{\rho}  d\rho = -B_2\rho_\mathrm{vap}-\frac{1}{2}B_3\rho_\mathrm{vap}^2
+\label{eqn:IntZvap}
+\end{equation}
+which is equal to $-A^\mathrm{dep}_\mathrm{vap}$. Finally, substituting Eq.~(\ref{eqn:AdepLiq2}-\ref{eqn:IntZvap}) in Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) results in
 
 \begin{equation}
 A^\mathrm{dep}_\mathrm{liq}
 + {Z_{\mathrm{liq}}} - 1 + \ln \left( \frac{{{\rho _{\mathrm{liq}}}}}{{{\rho _{\mathrm{vap}}}}} \right) = 2{B_2} {\rho _{\mathrm{vap}}} + \frac{3}{2}{B_3} \rho _{\mathrm{vap}}^2 
 \label{eqn:eqn14}
 \end{equation}
-which can be rearranged in terms of ${\rho_\mathrm{vap}}$ 
+where the $\ln \left( \frac{{{\rho _{\mathrm{liq}}}}}{{{\rho _{\mathrm{vap}}}}} \right)$ term appeared by solving the last integral of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}). Rearranging this equation in terms of ${\rho_\mathrm{vap}}$ results in
 
 \begin{equation}
 \rho _{\mathrm{vap}} = \rho _\mathrm{liq} \exp \left( A^\mathrm{dep}_\mathrm{liq} + {Z_{\mathrm{liq}}} - 1 - 2{B_2} {\rho _{\mathrm{vap}}} - \frac{3}{2}{B_3} \rho _{\mathrm{vap}}^2
 \right)
 \label{eqn:rhoV}
 \end{equation}
-Since $\rho_\mathrm{vap}$ appears on both sides of Eq.~(\ref{eqn:rhoV}), this equation can be solved iteratively, as explained in detail in Section~\ref{sec:ITIC-algorithm}. 
-
-Finally, assuming $\rho_\mathrm{vap}$, $T^\mathrm{sat}$, and virial coefficients at $T^\mathrm{sat}$ are known, vapor pressure ($P^\mathrm{sat}$) can be calculated using
+Since $\rho_\mathrm{vap}$ appears on both sides of Eq.~(\ref{eqn:rhoV}), this equation can be solved iteratively, as explained in detail in Section~\ref{sec:ITIC-algorithm}. Finally, assuming $\rho_\mathrm{vap}$, $T^\mathrm{sat}$, and virial coefficients at $T^\mathrm{sat}$ are known, vapor pressure ($P^\mathrm{sat}$) can be calculated using
 
 \begin{equation}
 \begin{array}{l}
@@ -297,6 +324,7 @@ P^\mathrm{sat} = P_\mathrm{vap} = {Z_\mathrm{vap}}{\rho _\mathrm{vap}}RT^\mathrm
 \end{equation}
 
 
+
 \subsection{ITIC algorithm}\label{sec:ITIC-algorithm}
 Implementation of the ITIC procedure starts with determining the temperatures and densities of the ITIC points shown in Figure~\ref{fig:ITICpathway}. In ITIC method, $\rho_\mathrm{liq}$ is imposed and $T^\mathrm{sat}$, $P^\mathrm{sat}$, and $\rho_\mathrm{vap}$ are calculated. This involves estimating saturation temperatures ($T^\mathrm{sat}_\mathrm{est}$), i.e. $T$ at points 11, 13, 15, 17, and 19. Once ITIC state points are determined, $NVT$ simulations are performed at the obtained conditions using either MD or MC, and the ensemble averages of $Z$ and $U^\mathrm{dep}$ are calculated from simulation output. $A^\mathrm{dep}_\mathrm{liq}$ is then calculated as explained in Section~\ref{sec:ITIC-state-points}. 
 
@@ -305,7 +333,11 @@ The first iteration starts by setting $Z_\mathrm{liq}$ to an initial value of ze
 Since the value of $T^\mathrm{sat}$ has changed, $U^\mathrm{dep}_\mathrm{liq}$ and $A^\mathrm{dep}_\mathrm{liq}$ should be recomputed. $U^\mathrm{dep}_\mathrm{liq}$ is updated by inter- or extrapolating $U^\mathrm{dep}T$ vs $1/T$ (i.e. $(U-U^\mathrm{ig})/R$ vs. $1/T$ in Eq.~\ref{eqn:AdepLiq2}) using a first order polynomial along the isochore, such that $U^\mathrm{dep}_\mathrm{liq,new} = U^\mathrm{dep}(T^\mathrm{sat}_\mathrm{new})$. Becuase $U^\mathrm{dep}T$ vs. $1/T$ has a linear shape in the vicinity of $T^\mathrm{sat}$, trapezoid rule is used to update $A^\mathrm{dep}_\mathrm{liq}$ according to the following equation
 
 \begin{equation}
-A^\mathrm{dep}_\mathrm{liq,new} = A^\mathrm{dep}_\mathrm{liq,old} + \left( \frac{1}{T^\mathrm{sat}_\mathrm{new}}-\frac{1}{T^\mathrm{sat}_\mathrm{old}} \right) \frac{U^\mathrm{dep}_\mathrm{new}T^\mathrm{sat}_\mathrm{new}+U^\mathrm{dep}_\mathrm{old}T^\mathrm{sat}_\mathrm{old}}{2} 
+\begin{array}{l}
+A^\mathrm{dep}_\mathrm{liq,new} = 
+\\
+A^\mathrm{dep}_\mathrm{liq,old} + \left( \frac{1}{T^\mathrm{sat}_\mathrm{new}}-\frac{1}{T^\mathrm{sat}_\mathrm{old}} \right) \frac{U^\mathrm{dep}_\mathrm{liq,new}T^\mathrm{sat}_\mathrm{new}+U^\mathrm{dep}_\mathrm{liq,old}T^\mathrm{sat}_\mathrm{old}}{2} 
+\end{array}
 \label{eqn:aDepCorrection}
 \end{equation}
 where subscript ``old" denotes the corresponding property at $T^\mathrm{sat}_\mathrm{old}$ and subscript ``new" denotes the property at updated $T^\mathrm{sat}_\mathrm{new}$ (For the first iteration, $T^\mathrm{sat}_\mathrm{old} = T^\mathrm{sat}_\mathrm{est}$). 
@@ -366,7 +398,7 @@ Calculate $A^\mathrm{dep}_\mathrm{liq}$ based on $T^\mathrm{sat}=T^\mathrm{sat}_
 Calculate $T^\mathrm{sat}_\mathrm{new}$ from $Z$ vs. $1/T$  such that $Z(T^\mathrm{sat}) = Z_\mathrm{liq}$ };
 
 \node [block,below of=step4,node distance=1cm] (stepUdep) {\footnotesize 
-Calculate $U^\mathrm{dep}_\mathrm{liq,new}$ from $U^\mathrm{dep}_\mathrm{liq}$ vs. $1/T$, i.e., $U^\mathrm{dep}_\mathrm{liq}(T^\mathrm{sat}_\mathrm{new})$ };
+Calculate $U^\mathrm{dep}_\mathrm{liq,new}$ from $U^\mathrm{dep}$ vs. $1/T$, i.e., $U^\mathrm{dep}(T^\mathrm{sat}_\mathrm{new})$ };
 
 \node [block,below of=stepUdep,node distance=1cm] (itartIcIterationa) {\footnotesize 
 Calculate $A^\mathrm{dep}_\mathrm{liq}$ (Eq.~\ref{eqn:aDepCorrection}) based on $T^\mathrm{sat}_\mathrm{new}$};
@@ -449,30 +481,30 @@ Second virial coefficient at a given temperature can be estimated by extrapolati
 \subsection{Enthalpy of Vaporization Calculation}\label{sec:HvapCalc}
 In the ITIC method, enthalpy of vaporization ($\Delta H_\mathrm{v}$) is calculated using
 \begin{equation}
-\Delta H_\mathrm{v}= ( H^{\mathrm{dep,sat}}_\mathrm{vap} - H^{\mathrm{dep,sat}}_\mathrm{liq})RT
+\Delta H_\mathrm{v}= ( H^{\mathrm{dep}}_\mathrm{vap} - H^{\mathrm{dep}}_\mathrm{liq})RT
 \label{eqn:Hvap}
 \end{equation}
-where $H^{\mathrm{dep,sat}}_\mathrm{vap}$ and $H^{\mathrm{dep,sat}}_\mathrm{liq}$ are unitless enthalpy departure functions of saturated vapor and liquid, respectively.
+where $H^{\mathrm{dep}}_\mathrm{vap}$ and $H^{\mathrm{dep}}_\mathrm{liq}$ are unitless enthalpy departure functions of saturated vapor and liquid, respectively.
 %, defined as
 %\begin{equation}
 %H^{\mathrm{dep}}=\frac{H-H^{\mathrm{ig}}}{RT}
 %\label{hdep}
 %\end{equation}
-$H^{\mathrm{dep,sat}}_\mathrm{vap}$ and $H^{\mathrm{dep,sat}}_\mathrm{liq}$  can be calculated by subtracting the ideal gas contribution from both sides of $H=U+PV$
+$H^{\mathrm{dep}}_\mathrm{vap}$ and $H^{\mathrm{dep}}_\mathrm{liq}$  can be calculated by subtracting the ideal gas contribution from both sides of $H=U+PV$
 
 \begin{equation}
-H^{\mathrm{dep,sat}}_\mathrm{liq} \approx U^{\mathrm{dep, sat}}_\mathrm{liq}+Z_\mathrm{liq} - 1
+H^{\mathrm{dep}}_\mathrm{liq} \approx U^{\mathrm{dep}}_\mathrm{liq}+Z_\mathrm{liq} - 1
 \label{eqn:HsatLiq}
 \end{equation}
 
 \begin{equation}
-H^{\mathrm{dep,sat}}_\mathrm{vap} \approx U^{\mathrm{dep, sat}}_\mathrm{vap}+Z_\mathrm{vap} - 1
+H^{\mathrm{dep}}_\mathrm{vap} \approx U^{\mathrm{dep}}_\mathrm{vap}+Z_\mathrm{vap} - 1
 \label{eqn:HsatVap}
 \end{equation}
 
-The value of $U^{\mathrm{dep, sat}}_\mathrm{liq}$ is calculated at each iteration based on the updated value of $T^{\mathrm{sat}}$. $U^{\mathrm{dep, sat}}_\mathrm{vap}$, on the other hand, is calculated by taking the derivative of $B_2$ with respect to $\beta$ as shown in Eq.~(\ref{eqn:dB2dbeta}).
+The value of $U^{\mathrm{dep}}_\mathrm{liq}$ is calculated at each iteration based on the updated value of $T^{\mathrm{sat}}$. $U^{\mathrm{dep}}_\mathrm{vap}$, on the other hand, is calculated by taking the derivative of $B_2$ with respect to $\beta$ as shown in Eq.~(\ref{eqn:dB2dbeta}).
 \begin{equation}
-U^{\mathrm{dep, sat}}_\mathrm{vap}\approx \rho_{\mathrm{vap}} \beta \frac{dB_2}{d\beta}
+U^{\mathrm{dep}}_\mathrm{vap}\approx \rho_{\mathrm{vap}} \beta \frac{dB_2}{d\beta}
 \label{eqn:dB2dbeta}
 \end{equation}
 
@@ -524,15 +556,15 @@ Some caution should be exercised when extrapolating Eqs.(\ref{eqn:rectilinearLaw
 \subsection{Validation using NIST REFPROP} 
 A first test to validate the ITIC method is to use a database that provides precise and self-consistent saturation properties and isochoric/isothermal properties. NIST Reference Fluid Properties software (REFPROP) provides such values \cite{LEMMON-RP91}, which were used to validate the ITIC method. The following comparisons are solely based on NIST REFPROP equations, therefore the lack of statistical noise inherent to molecular simulation enables an accurate evaluation of the numerical integration. Reproducing the REFPROP $P^{\mathrm{sat}}$ values using ITIC state points obtained from REFPROP is effectively a test of the spacing of the quadrature points since all the REFPROP thermodynamics derive exactly from their analytical equation of state.
 
-Figure~\ref{fig:NIST-VALIDATION_C12_FTT} shows the ITIC validation results for \textit{n}-dodecane when virial expansion in Eq.~(\ref{eqn:eqn11}) includes or excludes the $B_{3}$ term. The deviations of calculated $P^{\mathrm{sat}}$, $\rho_{\mathrm{liq}}$, $\rho_{\mathrm{vap}}$, and $\Delta H_{\mathrm{v}}$ from the data obtained directly from NIST REFPROP \cite{Lemmon2004} are plotted in Figure~\ref{fig:Nist-Val-Deviation}. According to this figure, by including the $B_3$ term, one can reach a reduced saturation temperature ($T_\mathrm{r}^{\mathrm{sat}}$) of 0.9 with less than 1 \% error in all saturation properties. The ITIC method is not able to calculate accurate saturation properties when $T_\mathrm{r}^{\mathrm{sat}}>0.9$. If the $B_3$ term is excluded from Eq.~(\ref{eqn:eqn11}), the ITIC method does not converge for $T_\mathrm{r}^{\mathrm{sat}} > 0.85$. When $T_\mathrm{r}^{\mathrm{sat}} < 0.85$, excluding the $B_3$ term provides less than 1 \% deviation in $P^{\mathrm{sat}}$, $\rho_{\mathrm{liq}}$, and $\Delta H_{\mathrm{v}}$ , and less than 2.5 \% deviation in $\rho_{\mathrm{vap}}$.
+Figure~\ref{fig:NIST-VALIDATION_C12_FTT} shows the ITIC validation results for \textit{n}-dodecane when virial expansion in Eq.~(\ref{eqn:Zvap}) includes or excludes the $B_{3}$ term. The deviations of calculated $P^{\mathrm{sat}}$, $\rho_{\mathrm{liq}}$, $\rho_{\mathrm{vap}}$, and $\Delta H_{\mathrm{v}}$ from the data obtained directly from NIST REFPROP \cite{Lemmon2004} are plotted in Figure~\ref{fig:Nist-Val-Deviation}. According to this figure, by including the $B_3$ term, one can reach a reduced saturation temperature ($T_\mathrm{r}^{\mathrm{sat}}$) of 0.9 with less than 1 \% error in all saturation properties. The ITIC method is not able to calculate accurate saturation properties when $T_\mathrm{r}^{\mathrm{sat}}>0.9$. If the $B_3$ term is excluded from Eq.~(\ref{eqn:Zvap}), the ITIC method does not converge for $T_\mathrm{r}^{\mathrm{sat}} > 0.85$. When $T_\mathrm{r}^{\mathrm{sat}} < 0.85$, excluding the $B_3$ term provides less than 1 \% deviation in $P^{\mathrm{sat}}$, $\rho_{\mathrm{liq}}$, and $\Delta H_{\mathrm{v}}$ , and less than 2.5 \% deviation in $\rho_{\mathrm{vap}}$.
 
-Figure~\ref{fig:convergence-path}(a) illustrates the convergence paths taken by a the ITIC iterations to calculate $\rho_{\mathrm{vap}}$, with $B_3$ included in Eq~(\ref{eqn:eqn11}). Figure~\ref{fig:convergence-path}(b) shows the same plot, except $B_3$ is excluded, i.e. virial expansion in Eq.~(\ref{eqn:eqn11}) is truncated at $B_{2}$ term. Using $B_3$ corrects the curve representing the right-hand side of Eq.~(\ref{eqn:rhoV}) in such a way that the iterations converge.
+Figure~\ref{fig:convergence-path}(a) illustrates the convergence paths taken by a the ITIC iterations to calculate $\rho_{\mathrm{vap}}$, with $B_3$ included in Eq~(\ref{eqn:Zvap}). Figure~\ref{fig:convergence-path}(b) shows the same plot, except $B_3$ is excluded, i.e. virial expansion in Eq.~(\ref{eqn:Zvap}) is truncated at $B_{2}$ term. Using $B_3$ corrects the curve representing the right-hand side of Eq.~(\ref{eqn:rhoV}) in such a way that the iterations converge.
 
 \begin{figure*}
 \centering
 \subfloat[]{\includegraphics[scale=0.25]{Figures/Nist-Validation-CoexistencePlots_psat.png}}
 \subfloat[]{\includegraphics[scale=0.25]{Figures/Nist-Validation-CoexistencePlots_trho.png}}
-\caption{\textit{n}-Dodecane Clausius-Clapeyron and coexistence curves. ITIC results (symbols) are obtained using NIST REFPROP \cite{Lemmon2004} values for $U^{\mathrm{dep}}$ and $Z$. Circles and triangles represent ITIC results when virial expansion in Eq.~(\ref{eqn:eqn11}) is truncated at $B_2$ and $B_3$ terms, respectively. Solid line represents true NIST REFPROP VLE data.
+\caption{\textit{n}-Dodecane Clausius-Clapeyron and coexistence curves. ITIC results (symbols) are obtained using NIST REFPROP \cite{Lemmon2004} values for $U^{\mathrm{dep}}$ and $Z$. Circles and triangles represent ITIC results when virial expansion in Eq.~(\ref{eqn:Zvap}) is truncated at $B_2$ and $B_3$ terms, respectively. Solid line represents true NIST REFPROP VLE data.
 }
 \label{fig:NIST-VALIDATION_C12_FTT}
 \end{figure*}
@@ -545,7 +577,7 @@ Figure~\ref{fig:convergence-path}(a) illustrates the convergence paths taken by 
 \subfloat[]{\includegraphics[scale=0.22]{Figures/Nist-Val-Deviation-rhoV.png}}
 \subfloat[]{\includegraphics[scale=0.22]{Figures/Nist-Val-Deviation-Hvap.png}}
 \caption{
-Accuracy of the ITIC method for \textit{n}-dodecane when Eq.~(\ref{eqn:eqn11}) is truncated at $B_2$ and $B_3$ term. If $B_3$ is excluded the ITIC iteration does not converge, when $T_\mathrm{r}^{\mathrm{sat}}>0.9$. Y-axis represents deviations calculated using $\frac{\mathrm{ITIC - REFPROP}}{\mathrm{REFPROP}} \times 100$, which compares ITIC results using REFPROP state points with REFPROP coesistence data.
+Accuracy of the ITIC method for \textit{n}-dodecane when Eq.~(\ref{eqn:Zvap}) is truncated at $B_2$ and $B_3$ term. If $B_3$ is excluded the ITIC iteration does not converge, when $T_\mathrm{r}^{\mathrm{sat}}>0.9$. Y-axis represents deviations calculated using $\frac{\mathrm{ITIC - REFPROP}}{\mathrm{REFPROP}} \times 100$, which compares ITIC results using REFPROP state points with REFPROP coesistence data.
 }
 \label{fig:Nist-Val-Deviation}
 \end{figure*}
@@ -557,8 +589,8 @@ Accuracy of the ITIC method for \textit{n}-dodecane when Eq.~(\ref{eqn:eqn11}) i
 \subfloat[]{\includegraphics[scale=0.22]{Figures/NIST-VAL_FTF_C12_conv_0_42690.png}}
 \caption{
 The ITIC iteration and convergence path for \textit{n}-dodecane for the isochore corresponding to $\rho_{\mathrm{liq}}=0.4269\,\mathrm{g/cm^3}$ ($T_\mathrm{r}^\mathrm{sat} \approx 0.94$). The y-axis represents the right-hand side of Eq.~(\ref{eqn:rhoV}). At each iteration, the $y$ curve is plotted based on a new set of $T^{\mathrm{sat}}$, $P^{\mathrm{sat}}$, $A^\mathrm{dep}$, and $Z_{\mathrm{liq}}$. Iteration starts with a low initial guess for $\rho_{\mathrm{vap}}$ and stops when absolute percent deviation between two consecutive $\rho_{\mathrm{vap}}$ values is less than a small tolerance, e.g. 0.1 \%.
-The blue line represents the 45-degree line. \textbf{a)} $B_3$ term is used in Eq.~(\ref{eqn:eqn11})
-, \textbf{b)} $B_3$ term is excluded from Eq.~(\ref{eqn:eqn11}). Using $B_3$ helps iteration to converge for high $T^{\mathrm{sat}}$ values.}
+The blue line represents the 45-degree line. \textbf{a)} $B_3$ term is used in Eq.~(\ref{eqn:Zvap})
+, \textbf{b)} $B_3$ term is excluded from Eq.~(\ref{eqn:Zvap}). Using $B_3$ helps iteration to converge for high $T^{\mathrm{sat}}$ values.}
 \label{fig:convergence-path}
 \end{figure*}
 
