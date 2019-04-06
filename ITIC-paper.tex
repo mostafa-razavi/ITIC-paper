@@ -1,75 +1,30 @@
 \documentclass[5p,times]{elsarticle}
-%===============
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
 \usepackage{graphicx}
-
 \usepackage{epstopdf}
 \usepackage{dcolumn}
 \usepackage{bm}
-%\usepackage[mathlines]{lineno}
-%\linenumbers\relax
 \usepackage{amsmath}
-
 \usepackage{xr-hyper}
-%\externaldocument{ITIC-supp}
-%\externaldocument[S-]{ITIC-supp}
-
 \usepackage[latin1]{inputenc}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 \usepackage{hyperref}
-
-%\usepackage{enumitem}
-
 \usepackage[position=top]{subfig}
-
-
-%===============
 \usepackage{lineno,hyperref}
 
 \modulolinenumbers[5]
-
 \journal{Fluid Phase Equilibria}
-
-%%%%%%%%%%%%%%%%%%%%%%%
-%% Elsevier bibliography styles
-%%%%%%%%%%%%%%%%%%%%%%%
-%% To change the style, put a % in front of the second line of the current style and
-%% remove the % from the second line of the style you would like to use.
-%%%%%%%%%%%%%%%%%%%%%%%
-
-%% Numbered
-%\bibliographystyle{model1-num-names}
-
-%% Numbered without titles
-%\bibliographystyle{model1a-num-names}
-
-%% Harvard
-%\bibliographystyle{model2-names.bst}\biboptions{authoryear}
-
-%% Vancouver numbered
-%\usepackage{numcompress}\bibliographystyle{model3-num-names}
-
-%% Vancouver name/year
-%\usepackage{numcompress}\bibliographystyle{model4-names}\biboptions{authoryear}
-
-%% APA style
-%\bibliographystyle{model5-names}\biboptions{authoryear}
-
-%% AMA style
-%\usepackage{numcompress}\bibliographystyle{model6-num-names}
-
-%% `Elsevier LaTeX' style
 \bibliographystyle{elsarticle-num}
-%%%%%%%%%%%%%%%%%%%%%%%
 \hypersetup{draft}
+
+
 \begin{document}
 
 \begin{frontmatter}
 
 \title{Coexistence Calculation Using the Isothermal-Isochoric Integration Method}
 
-%% Group authors per affiliation:
 \author{S. Mostafa Razavi}
 \ead{sr87@uakron.edu}
 \address{Department of Chemical and Biomolecular Engineering, The University of Akron, Akron, Ohio 44325, USA}
@@ -77,11 +32,6 @@
 \author{Richard A. Messerly}
 \ead{richard.messerly@nist.gov}
 \address{Thermodynamics Research Center, National Institute of Standards and Technology, Boulder, Colorado 80305, USA}
-
-%% or include affiliations in footnotes:
-%\author[mymainaddress,mysecondaryaddress]{Elsevier Inc}
-%\ead[url]{www.elsevier.com}
-
 
 \author{J. Richard Elliott \corref{mycorrespondingauthor}}
 \cortext[mycorrespondingauthor]{Corresponding author}
@@ -98,8 +48,6 @@ Vapor Pressure, Vapor Liquid Equilibria, Phase Diagram, Liquid Density
 
 \end{frontmatter}
 
-%\linenumbers
-
 \section{Introduction} \label{sec:introduction}
 Phase coexistence determination is important when characterizing the physical properties of a chemical compound. Both the vapor pressure ($P^{\mathrm{sat}}$) and saturation liquid and vapor density ($\rho_{\mathrm{liq}}$ and $\rho_{\mathrm{vap}}$) provide sensitive measures of the quality provided by a particular force field. In principle, the computation of phase coexistence is a simple matter of equating pressures, temperatures, and chemical potentials between the coexisting phases. Nevertheless, accurate computation of phase coexistence by molecular simulation has posed challenges over the years. 
 
@@ -110,8 +58,6 @@ are two closely related methods used for calculation of phase equilibrium based 
 
 As another alternative, Kofke \cite{Kofke1993b} developed a method called Gibbs-Duhem integration which makes use of the Clapeyron equation to numerically integrate and proceed along the saturation line starting from one single coexistence point. This method has been extensively used to extend the lower temperature limit of coexistence calculations much below the normal boiling point \cite{Ahunbay2004} \cite{Vega2009} \citep{Ungerer2000} \cite{Vega2006} \cite{Yiannourakou2018}. The Gibbs-Duhem method can solve the insertion problem, but it relies on a second method to obtain the initial coexistence point. Ahunbay et al. \cite{Ahunbay2004}, for example, have applied this approach in conjunction with GEMC to obtain the initial coexistence point, $NPT$ simulations (constant number of molecules, pressure, and temperature) to estimate saturation liquid densities, and parallel tempering method \cite{Yan1999} to increase the efficiency of low temperature simulations. Their implementation is tested at reduced temperatures above 0.45 for several compounds. Note that in Gibbs-Duhem method, vapor density can also be obtained from the ideal gas equation or through separate $NPT$ simulations at the computed saturation pressure and temperature.
 
-%Ahunbay et al. \cite{Ahunbay2004} have applied this approach in conjunction with GEMC to obtain the initial coexistence point, $NPT$ simulations to estimate saturation liquid densities, and parallel tempering method \cite{Yan1999} to increase the efficiency of low temperature simulations. Their implementation is tested at reduced temperatures above 0.45 for several compounds, however it does not provide saturation vapor density unless it is calculated directly from GEMC simulation.
-
 As one more alternative, thermodynamic integration (TI) can provide a reliable solution for free energy calculation. In this method, a series of simulations are performed along a path that connects the state of interest to a system for which the free energy is known. One should be careful that the path does not include any type of phase change\cite{Vega2009}. Elliott et al. \cite{Elliott1999a} applied an isochoric integration method to calculate vapor-liquid equilibria (VLE) of square well spheres, demonstrating deficiencies in the preceding MC results.  For square well spheres, a convenient starting isotherm is the hard sphere limit, for which the thermodynamics are well represented by the Carnahan-Starling equation\cite{Carnahan1969a}. In this work, however, results are sought for soft potential models of arbitrary molecular shape, for which the infinite temperature limit is not convenient. 
 
 In the proposed method, $NVT$ simulation points are used across an isotherm and along several isochores, hence the name isothermal-isochoric (ITIC) \cite{Razavi2016}. Because the approach to low temperatures proceeds along an isochore initialized at the high temperature (supercritical) isotherm, the insertion move problem is alleviated. In principle, there is no low temperature limit for the applicability of this method, except the triple point. 
@@ -120,11 +66,11 @@ Also, the data generated along the paths of integration are valuable on their ow
 
 As another advantage, vapor pressure calculation using molecular dynamics (MD) is often perceived as an impractical approach \cite{Nieto-Draghi2015}. In this work, we show the possibility of using molecular dynamics in the context of ITIC integration as a viable tool for VLE calculation. The ITIC method provides a cross-platform solution to the problem of VLE calculation without a significant increase in computational effort compared to the typical GEMC or GCMC approaches \cite{Razavi2016,Messerly2018}.
  
-The presentation is initiated in Section~\ref{sec:ITIC-method} with a review of the thermodynamics underlying the integration method and some practical implementation aspects. The approach is validated in Section~\ref{sec:NIST-VAL} by applying it to coexistence data available from the National Institute of Standards and Technology (NIST). Section~\ref{sec:SimDetail} describes the details of simulations that are found in Sections~\ref{sec:VirialCalc}-\ref{sec:ExampleSim}. Section~\ref{sec:VirialCalc} provides recommendations for the most convenient and effective methods for characterizing the virial coefficients by molecular simulation. Section~\ref{sec:FSE} investigates the impact of system size, fixed or flexible bonds, and Monte Carlo or molecular dynamics when simulating at low densities. Section~\ref{sec:ExampleSim} demonstrates applications to molecular simulations and comparison between the ITIC method and other methods of phase coexistence calculation. Finally, Section~\ref{sec:conclusion} summarizes the conclusions from this work.
+The presentation is initiated in Section~\ref{sec:ITIC-method} with a review of the thermodynamics underlying the integration method and some practical implementation aspects. The approach is validated in Section~\ref{sec:NIST-VAL} by applying it to coexistence data available from the National Institute of Standards and Technology (NIST). Section~\ref{sec:SimDetail} describes the details of simulations that are found in Sections~\ref{sec:VirialCalc}-\ref{sec:ExampleSim}. Section~\ref{sec:VirialCalc} provides recommendations for the most convenient and effective methods for characterizing the virial coefficients by molecular simulation. This section also investigates the impact of system size, fixed or flexible bonds, and Monte Carlo or molecular dynamics when simulating at low densities. Section~\ref{sec:ExampleSim} demonstrates applications to molecular simulations and comparison between the ITIC method and other methods of phase coexistence calculation. Finally, Section~\ref{sec:conclusion} summarizes the conclusions from this work.
 
 \section{The Isothermal-Isochoric Integration Method} \label{sec:ITIC-method}
 \subsection{Derivation of the vapor pressure and density formulas}
-In this section, the dimensionless departure functions defined below are used to represent different forms of energy
+In this study, the dimensionless departure functions defined below are used to represent different forms of energy
 
 \begin{equation}
 \begin{array}{l}
@@ -142,37 +88,37 @@ H^\mathrm{dep}(T,\rho)=  \frac{ H(T,\rho)-H_\mathrm{ig}(T,\rho)}{RT}
 \end{array} 
 \label{eqn:DepDefinition}
 \end{equation}
-where $T$, $\rho$, $P$, and $R$ are temperature, density, pressure, and the gas constant ($8.3144598\,\mathrm{J/(mol\,K)}$), respectively. $A^\mathrm{dep}$, $U^\mathrm{dep}$, and $H^\mathrm{dep}$ represent Helmholtz energy, internal energy, and enthalpy departure functions, respectively. The subscript ``ig" denotes the ideal gas.
+where $T$, $\rho$, $P$, and $R$ are temperature, molar density, pressure, and the gas constant ($8.3144598\,\mathrm{J/(mol\,K)}$), respectively. $A^\mathrm{dep}$, $U^\mathrm{dep}$, and $H^\mathrm{dep}$ represent departure functions for the Helmholtz energy $(A)$, internal energy $(U)$, and enthalpy $(H)$, respectively. The subscript ``ig" denotes the ideal gas.
 
 For a single component system, Eq.~(\ref{eqn:PhaseEquilbriumCriterion}) must be satisfied at vapor-liquid phase equilibrium
 \begin{equation}
 \begin{array}{l}
-{T_\mathrm{liq} =T_\mathrm{vap} }\\
-{P_\mathrm{liq} =P_\mathrm{vap} }\\
+{T_\mathrm{liq} =T_\mathrm{vap} = T^\mathrm{sat} }\\
+{P_\mathrm{liq} =P_\mathrm{vap} = P^\mathrm{sat} }\\
 {G_\mathrm{liq} =G_\mathrm{vap} }
 \end{array} 
 \label{eqn:PhaseEquilbriumCriterion}
 \end{equation}
-where $G$ represents Gibbs energy and subscripts ``vap" and ``liq" denote the saturated vapor and liquid phases, respectively.  The Gibbs energy criterion of phase equilibrium can be written in terms of Helmholtz energy
-
+where subscripts ``vap" and ``liq" denote the saturated vapor and liquid phases, respectively, and $G$, $T^\mathrm{sat}$, and $P^\mathrm{sat}$ represent Gibbs energy, saturation temperature, and saturation pressure, respectively. By substituting $G \equiv A+PV$, where $V$ is the molar volume $\left(V \equiv \frac{1}{\rho}\right)$, the Gibbs energy criterion of phase equilibrium can be written in terms of Helmholtz energy 
 
 \begin{equation}
-\frac{A_\mathrm{liq}}{RT_\mathrm{liq}} + \frac{P_\mathrm{liq}V_\mathrm{liq}}{RT_\mathrm{liq}}=\frac{A_\mathrm{vap}}{RT_\mathrm{vap}} + \frac{P_\mathrm{vap}V_\mathrm{vap}}{RT_\mathrm{vap}}
+\frac{A_\mathrm{liq}}{RT_\mathrm{liq}} + \frac{P_\mathrm{liq}}{\rho_\mathrm{liq}RT_\mathrm{liq}}=\frac{A_\mathrm{vap}}{RT_\mathrm{vap}} + \frac{P_\mathrm{vap}}{\rho_\mathrm{vap}RT_\mathrm{vap}}
 \label{eqn:ACriterion}
 \end{equation}
-where $V$ represents volume. This equation which is derived based on the fundamental relationship between Gibbs and Helmholtz energies ($G \equiv A+PV$) can be simplified as 
+where $A_\mathrm{liq}$ and $A_\mathrm{vap}$ are the saturated liquid and saturated vapor Helmholtz energies, respectively, i.e., $A_\mathrm{liq}=A(T^\mathrm{sat},\rho_\mathrm{liq})$, $A_\mathrm{vap}=A(T^\mathrm{sat},\rho_\mathrm{vap})$.
+This equation can be simplified as
 
 \begin{equation}
 \frac{A_\mathrm{liq}}{RT^\mathrm{sat}} - \frac{A_\mathrm{vap}}{RT^\mathrm{sat}} = Z_\mathrm{vap} - Z_\mathrm{liq} 
 \label{eqn:ACriterion-simple}
 \end{equation}
-where $T^\mathrm{sat}$ and $Z$ represent saturation temperature and compressibility factor, respectively, and $A_\mathrm{liq}=A(T^\mathrm{sat},\rho_\mathrm{liq})$, $A_\mathrm{vap}=A(T^\mathrm{sat},\rho_\mathrm{vap})$. Calculating the vapor-liquid phase equilibrium requires solvig Eq~(\ref{eqn:ACriterion-simple}).
+where $Z$ is the compressibility factor $\left(Z\equiv \frac{P}{\rho RT}\right)$. Calculating the vapor-liquid phase equilibrium requires solving Eq~(\ref{eqn:ACriterion-simple}).
 
-Determining the left-hand side of Eq~(\ref{eqn:ACriterion-simple}) involves connecting the liquid phase to vapor phase, however this pathway cannot pass through the two-phase region. Since $A$ is a state function, in order to avoid the two-phase region the following path is taken: 1) The temperature of the liquid is increased to a supercritical temperature ($T^\mathrm{IT}$). 2) The density of the supercritical fluid ($\rho_\mathrm{liq}$) is decreased to zero. 3) The temperature of the resulting supercritical fluid is decreased back to saturation temperature. 4) The density is increased from zero to the density of the vapor phase ($\rho_\mathrm{liq}$).\\
+Determining the left-hand side of Eq~(\ref{eqn:ACriterion-simple}) involves connecting the liquid phase to vapor phase, however, this pathway cannot pass through the two-phase region. In order to avoid the two-phase region, and because $A$ is a state function, the following path is taken: 1) The temperature of the saturated liquid is increased to a supercritical temperature ($T^\mathrm{IT}$). 2) The density of the supercritical fluid ($\rho_\mathrm{liq}$) is decreased to zero. 3) The temperature of the resulting supercritical fluid is decreased back to saturation temperature $(T^\mathrm{sat})$. 4) The density is increased from zero to the density of the saturated vapor phase ($\rho_\mathrm{vap}$).\\
 
 $(T^\mathrm{sat},\rho_\mathrm{liq}) \xrightarrow{\text{1}} (T^\mathrm{IT},\rho_\mathrm{liq}) \xrightarrow{\text{2}} (T^\mathrm{IT},0) \xrightarrow{\text{3}} (T^\mathrm{sat},0) \xrightarrow{\text{4}} (T^\mathrm{sat},\rho_\mathrm{vap})$ \\
 
-Hence, the alternative pathway includes two isothermal and two isochoric paths. In the ITIC method, several separate simulations in the canonical ensemble (NVT) are needed to construct the first three paths (see Section~\ref{sec:ITIC-state-points}), and the fourth path is characterized by virial coefficient expansion (see Section~\ref{sec:VirialCalc}).
+Hence, this four-step pathway includes two isochoric paths (1 and 3) and two isothermal paths (2 and 4). In the ITIC method, several separate simulations in the canonical ensemble (NVT) are needed to construct the first three paths (see Section~\ref{sec:ITIC-state-points}), and the fourth path is characterized by virial coefficient expansion (see Section~\ref{sec:VirialCalc}).
 
 The Helmholtz energy change along an isochoric path is calculated by using Eq.~(\ref{eqn:DeltaA-IC}) \cite{Elliott1999}.
 
@@ -196,7 +142,6 @@ where $T$ represents the isotherm temperature. Using Eq.~(\ref{eqn:DeltaA-IC}) a
 \int _{T^\mathrm{IT}}^{T^\mathrm{sat}} \frac{U(T,\rho_\mathrm{liq})}{R}  d\left(\frac{1}{T}\right)
 \label{eqn:path1}
 \end{equation}
-
 
 \begin{equation}
 \frac{A(T^\mathrm{IT},\rho_\mathrm{liq})}{RT^\mathrm{IT}}
@@ -224,7 +169,7 @@ where $T$ represents the isotherm temperature. Using Eq.~(\ref{eqn:DeltaA-IC}) a
 \int _{\rho_\mathrm{vap}}^{0} \frac{Z(T^\mathrm{sat},\rho)}{\rho}  d\rho
 \label{eqn:path4}
 \end{equation}
-Adding Eq.~(\ref{eqn:path1}-\ref{eqn:path4}) results in the following equation, noting that the left-hand side of Eq.~(\ref{eqn:ACriterion-simple}) can be written as the summation of the left-hand sides of Eq.~(\ref{eqn:path1}-\ref{eqn:path4}). 
+Noting that the summation of the left-hand sides of Eq.~(\ref{eqn:path1}-\ref{eqn:path4}) is equal to the left-hand side of Eq.~(\ref{eqn:ACriterion-simple}), adding Eq.~(\ref{eqn:path1}-\ref{eqn:path4}) results in the following equation
 
 \begin{equation}
 \begin{array}{l}
@@ -236,7 +181,7 @@ Adding Eq.~(\ref{eqn:path1}-\ref{eqn:path4}) results in the following equation, 
 \label{eqn:paths1-4}
 \end{equation}
 
-Since the integrands ($\frac{Z}{\rho}$) in Eq.~(\ref{eqn:path2}) and Eq.~(\ref{eqn:path4}) are infinity at $\rho=0$, using these two equations is not practical. A workaround for this problem is to obtain the ideal gas equivalents of Eq.~(\ref{eqn:path2}) and Eq.~(\ref{eqn:path4}) as follows
+Implementing Eq.~(\ref{eqn:paths1-4}) is not practical, however, because the last two integrals are ill-defined, i.e. at zero density where $Z=1$, the $\frac{Z}{\rho}$ integrands are infinity. A workaround for this problem is to obtain the ideal gas equivalents of Eq.~(\ref{eqn:path2}) and Eq.~(\ref{eqn:path4}) as follows
 
 \begin{equation}
 \frac{A_\mathrm{ig}(T^\mathrm{IT},\rho_\mathrm{liq})}{RT^\mathrm{IT}}
@@ -255,9 +200,7 @@ Since the integrands ($\frac{Z}{\rho}$) in Eq.~(\ref{eqn:path2}) and Eq.~(\ref{e
 \int _{\rho_\mathrm{vap}}^{0} \frac{1}{\rho}  d\rho
 \label{eqn:path4-ig}
 \end{equation} 
-noting that $Z_\mathrm{ig}=1$. Eq.~(\ref{eqn:path2-ig}-\ref{eqn:path4-ig}) are then added to and subtracted from Eq.~(\ref{eqn:paths1-4}) to obtain
-
-%with the desirable $\frac{Z-1}{\rho}$ format from which we subtract Eq.~(\ref{eqn:path2-ig}-\ref{eqn:path4-ig}) to cancel out the effect of adding them. Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) provides the result of these additions
+noting that $Z_\mathrm{ig}=1$. The right-hand sides of Eq.~(\ref{eqn:path2-ig}-\ref{eqn:path4-ig}) are then added to and subtracted from Eq.~(\ref{eqn:paths1-4}) to obtain
 
 \begin{equation}
 \begin{array}{l}
@@ -267,9 +210,9 @@ noting that $Z_\mathrm{ig}=1$. Eq.~(\ref{eqn:path2-ig}-\ref{eqn:path4-ig}) are t
 \end{array}
 \label{eqn:5Integrals=Zvap-Zliq}
 \end{equation}
-where $U_\mathrm{ig}(T,\rho_\mathrm{liq})=U(T,0)$. The main advantage of this equation over Eq.~(\ref{eqn:paths1-4}) is that the integrands of isothermal integrals have the $\frac{(Z-1)}{\rho}$ form with a finite value at $\rho=0$.  In addition, the last integral of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) which appeared as a result of adding right-hand sides of Eq.~(\ref{eqn:path2-ig}-\ref{eqn:path4-ig}) has non-zero limits.
+where $U_\mathrm{ig}(T,\rho_\mathrm{liq})=U(T,0)$. The main advantage of this equation over Eq.~(\ref{eqn:paths1-4}) is that integrands of the $\frac{Z-1}{\rho}$ form are finite at $\rho=0$. In addition, the last integral of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}), which arises as a result of summing the right-hand sides of Eq.~(\ref{eqn:path2-ig}-\ref{eqn:path4-ig}), has positive non-zero limits.
 
-The first two integrals of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) represent the Helmholtz energy departure of the liquid phase ($A^\mathrm{dep}_\mathrm{liq}$)
+The first two integrals of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) represent the Helmholtz energy departure of the saturated liquid phase ($A^\mathrm{dep}_\mathrm{liq}$)
 
 \begin{equation}
 \begingroup
@@ -278,35 +221,45 @@ The first two integrals of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) represent the He
 A^\mathrm{dep}_\mathrm{liq} = \frac{A(T^\mathrm{sat},\rho_\mathrm{liq})}{RT^\mathrm{sat}} - \frac{A_\mathrm{ig}(T^\mathrm{sat},\rho_\mathrm{liq})}{RT^\mathrm{sat}}
 = 
 \\
-\int _{T^{\mathrm{IT}}}^{T^{\mathrm{\mathrm{sat}}}
-} \left. \frac{U-U_\mathrm{ig}}{R} \right\vert_{\rho=\rho_{\mathrm{liq}}} \mathrm{d} \left(\frac{1}{T} \right) + \int _{0}^{\rho _{\mathrm{liq}} } \left. \frac{Z-1}{\rho } \right\vert_{T=T^{\mathrm{IT}}} \mathrm{d}\rho   
+\int _{T^\mathrm{IT}}^{T^\mathrm{sat}} TU^\mathrm{dep}(T,\rho_\mathrm{liq}) d\left(\frac{1}{T}\right)+\int _{0}^{\rho_\mathrm{liq}} \frac{Z(T^\mathrm{IT},\rho)-1}{\rho}  d\rho    
 \end{array} 
 \endgroup
 \label{eqn:AdepLiq2}
 \end{equation}
-that can be derived by adding Eq.~(\ref{eqn:path1}-\ref{eqn:path3}) and subtracting Eq.~(\ref{eqn:path2-ig}) evaluated at $T^\mathrm{sat}$, noting that $A(T,0)=A_\mathrm{ig}(T,0)$. The above two integrals are calculated numerically by using NVT simulation data (see Section~\ref{sec:ITIC-state-points}).
+where $TU^\mathrm{dep}$ is obtained by multiplying and dividing the integrand by $T$, noting that $T\neq 0$. Eq.~(\ref{eqn:AdepLiq2}) can be derived by adding Eq.~(\ref{eqn:path1}-\ref{eqn:path3}) and subtracting a form of Eq.~(\ref{eqn:path2-ig}) evaluated at $T^\mathrm{sat}$, noting that $A(T^\mathrm{sat},0)=A_\mathrm{ig}(T^\mathrm{sat},0)$. The two integrals in Eq.~(\ref{eqn:AdepLiq2}) are calculated numerically by using NVT simulation data (see Section~\ref{sec:ITIC-state-points}).
 
-Since the density of the vapor phase is low at most conditions of interest, the value for $Z_{\mathrm{vap}}$ in Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) can be approximated using a virial expansion truncated at the $B_3$ term
+Since the density of the saturated vapor phase is low at most conditions of interest, the value for $Z_{\mathrm{vap}}$ in Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) can be approximated using a third-order truncated virial expansion
 
 \begin{equation}
 {Z_{\mathrm{vap}}} = 1 + {B_2}{\rho_{\mathrm{vap}}} + {B_3}\rho_{\mathrm{vap}}^2
 \label{eqn:Zvap}
 \end{equation}
-which is substituted in the third integral of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) to obtain
+where $B_2$ and $B_3$ are, respectively, the second and third virial coefficients evaluated at $T^\mathrm{sat}$. 
+
+The third integral of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) is related to the Helmholtz energy departure of the saturated vapor phase $(A^\mathrm{dep}_\mathrm{vap})$. Substituting a density-dependent form of Eq.~(\ref{eqn:Zvap}) in Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) results in
 
 \begin{equation}
-\int _{\rho_\mathrm{vap}}^{0} \frac{Z(T^\mathrm{sat},\rho)-1}{\rho}  d\rho = -B_2\rho_\mathrm{vap}-\frac{1}{2}B_3\rho_\mathrm{vap}^2
+\begingroup
+\large
+\begin{array}{l}
+A^\mathrm{dep}_\mathrm{vap} = \frac{A(T^\mathrm{sat},\rho_\mathrm{vap})}{RT^\mathrm{sat}} - \frac{A_\mathrm{ig}(T^\mathrm{sat},\rho_\mathrm{vap})}{RT^\mathrm{sat}}
+= 
+\\
+\int _{0}^{\rho_\mathrm{vap}} \frac{Z(T^\mathrm{sat},\rho)-1}{\rho}  d\rho = B_2\rho_\mathrm{vap}+\frac{1}{2}B_3\rho_\mathrm{vap}^2    
+\end{array} 
+\endgroup
 \label{eqn:IntZvap}
 \end{equation}
-which is equal to $-A^\mathrm{dep}_\mathrm{vap}$. Finally, substituting Eq.~(\ref{eqn:AdepLiq2}-\ref{eqn:IntZvap}) in Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) results in
+where $A^\mathrm{dep}_\mathrm{vap}$ can be derived by subtracting Eq.~(\ref{eqn:path4-ig}) from Eq.~(\ref{eqn:path4}), noting again that $A(T^\mathrm{sat},0)=A_\mathrm{ig}(T^\mathrm{sat},0)$.
+
+Finally, substituting Eq.~(\ref{eqn:AdepLiq2}-\ref{eqn:IntZvap}) in Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}) results in
 
 \begin{equation}
 A^\mathrm{dep}_\mathrm{liq}
 + {Z_{\mathrm{liq}}} - 1 + \ln \left( \frac{{{\rho _{\mathrm{liq}}}}}{{{\rho _{\mathrm{vap}}}}} \right) = 2{B_2} {\rho _{\mathrm{vap}}} + \frac{3}{2}{B_3} \rho _{\mathrm{vap}}^2 
 \label{eqn:eqn14}
 \end{equation}
-where the $\ln \left( \frac{{{\rho _{\mathrm{liq}}}}}{{{\rho _{\mathrm{vap}}}}} \right)$ term appeared by solving the last integral of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}). Rearranging this equation in terms of ${\rho_\mathrm{vap}}$ results in
-
+where the $\ln \left( \frac{{{\rho _{\mathrm{liq}}}}}{{{\rho _{\mathrm{vap}}}}} \right)$ term is obtained by solving the last integral of Eq.~(\ref{eqn:5Integrals=Zvap-Zliq}). Rearranging this equation in terms of ${\rho_\mathrm{vap}}$ results in
 \begin{equation}
 \rho _{\mathrm{vap}} = \rho _\mathrm{liq} \exp \left( A^\mathrm{dep}_\mathrm{liq} + {Z_{\mathrm{liq}}} - 1 - 2{B_2} {\rho _{\mathrm{vap}}} - \frac{3}{2}{B_3} \rho _{\mathrm{vap}}^2
 \right)
@@ -330,13 +283,13 @@ Implementation of the ITIC procedure starts with determining the temperatures an
 
 The first iteration starts by setting $Z_\mathrm{liq}$ to an initial value of zero (After the first iteration, $Z_\mathrm{liq}$ is updated with the value from previous iteration). Next, $T^\mathrm{sat}$ is calculated by inter- or extrapolating the isochoric simulation results, specifically, we fit Z vs reciprocal temperature to a second order polynomial and solve for $T^\mathrm{sat}$ such that $Z(T^\mathrm{sat})=Z_\mathrm{liq}$. It should be noted that iterations of $T^\mathrm{sat}$ do not require further simulations because the isochoric integration can be performed with interpolated values of the compressibility factor, noting the smooth behavior of $Z$ vs. reciprocal temperature.
 
-Since the value of $T^\mathrm{sat}$ has changed, $U^\mathrm{dep}_\mathrm{liq}$ and $A^\mathrm{dep}_\mathrm{liq}$ should be recomputed. $U^\mathrm{dep}_\mathrm{liq}$ is updated by inter- or extrapolating $U^\mathrm{dep}T$ vs $1/T$ (i.e. $(U-U^\mathrm{ig})/R$ vs. $1/T$ in Eq.~\ref{eqn:AdepLiq2}) using a first order polynomial along the isochore, such that $U^\mathrm{dep}_\mathrm{liq,new} = U^\mathrm{dep}(T^\mathrm{sat}_\mathrm{new})$. Becuase $U^\mathrm{dep}T$ vs. $1/T$ has a linear shape in the vicinity of $T^\mathrm{sat}$, trapezoid rule is used to update $A^\mathrm{dep}_\mathrm{liq}$ according to the following equation
+Since the value of $T^\mathrm{sat}$ has changed, $U^\mathrm{dep}_\mathrm{liq}$ and $A^\mathrm{dep}_\mathrm{liq}$ should be recomputed. $U^\mathrm{dep}_\mathrm{liq}$ is updated by inter- or extrapolating $TU^\mathrm{dep}$ vs $1/T$ (i.e. $(U-U^\mathrm{ig})/R$ vs. $1/T$ in Eq.~\ref{eqn:AdepLiq2}) using a first order polynomial along the isochore, such that $U^\mathrm{dep}_\mathrm{liq,new} = U^\mathrm{dep}(T^\mathrm{sat}_\mathrm{new})$. Because $TU^\mathrm{dep}$ vs. $1/T$ has a linear shape in the vicinity of $T^\mathrm{sat}$, trapezoid rule is used to update $A^\mathrm{dep}_\mathrm{liq}$ according to the following equation
 
 \begin{equation}
 \begin{array}{l}
 A^\mathrm{dep}_\mathrm{liq,new} = 
 \\
-A^\mathrm{dep}_\mathrm{liq,old} + \left( \frac{1}{T^\mathrm{sat}_\mathrm{new}}-\frac{1}{T^\mathrm{sat}_\mathrm{old}} \right) \frac{U^\mathrm{dep}_\mathrm{liq,new}T^\mathrm{sat}_\mathrm{new}+U^\mathrm{dep}_\mathrm{liq,old}T^\mathrm{sat}_\mathrm{old}}{2} 
+A^\mathrm{dep}_\mathrm{liq,old} + \left( \frac{1}{T^\mathrm{sat}_\mathrm{new}}-\frac{1}{T^\mathrm{sat}_\mathrm{old}} \right) \frac{T^\mathrm{sat}_\mathrm{new}U^\mathrm{dep}_\mathrm{liq,new}+T^\mathrm{sat}_\mathrm{old}U^\mathrm{dep}_\mathrm{liq,old}}{2} 
 \end{array}
 \label{eqn:aDepCorrection}
 \end{equation}
@@ -372,7 +325,6 @@ The algorithm in Figure~2 also includes a step for obtaining second virial coeff
 \tikzstyle{smallblock2} = [rectangle, draw, fill=blue!20, text width=7em, text centered, rounded corners, minimum height=1em]
 \tikzstyle{smallblock3} = [rectangle, draw, fill=blue!20, text width=19em, text centered, rounded corners, minimum height=1em]
 \tikzstyle{line} = [draw, -latex']
-%\footnotesize Determine $\rho$ and $T$ values in Figure~\ref{fig:ITICpathway}:
 
 \begin{tikzpicture}[node distance = 1.5cm, auto,thick,scale=0.8, every node/.style={scale=0.8}]
 
@@ -452,10 +404,7 @@ Report $P^\mathrm{sat}$, $T^\mathrm{sat}$, $\rho_\mathrm{vap}$, and $\rho_\mathr
 
 
 \subsection{ITIC state points and integration schemes}\label{sec:ITIC-state-points}
-Figure~\ref{fig:ITICpathway} provides a schematic plot of ITIC state points. The minimal number of data points on each path required to achieve reliable results is determined. 
-%In order to reach the densities of interest and maintain an acceptable accuracy of VLE data to a reduced temperature of 0.45, one needs at least 9 data points on the isotherm and three data points on the isochore for each saturation point. 
-In order to estimate VLE data to a reduced temperature of 0.45 with precision comparable to that of GEMC and GCMC methods, one needs at least 9 data points on the isotherm and three data points on the isochore for each saturation point (see Section \ref{sec:NIST-VAL}).
-The highest temperature state points, however, can serve on both isochores and isotherm, hence these points are only simulated once. The isotherm is constructed at a supercritical temperature. A reduced temperature of $T_\mathrm{r} \approx 1.2$ was the default value for the isotherm. For some compounds, owing to lack of NIST REFPROP values at high temperatures and the desire to compare isochores and isotherms to NIST REFPROP values when possible, a lower reduced temperature ($T_\mathrm{r} \approx 1.05$) is chosen for the isotherm. Validations against NIST REFPROP values show that any reduced temperature from 1.05 to 1.2 led to acceptable accuracy (results not presented here).
+Figure~\ref{fig:ITICpathway} provides a schematic plot of ITIC state points. The minimal number of data points on each path required to achieve reliable results is determined. In order to estimate VLE data to a reduced temperature of 0.45 with precision comparable to that of GEMC and GCMC methods, one needs at least 9 data points on the isotherm and three data points on the isochore for each saturation point (see Section \ref{sec:NIST-VAL}). The highest temperature state points, however, can serve on both isochores and isotherm, hence these points are only simulated once. The isotherm is constructed at a supercritical temperature. A reduced temperature of $T_\mathrm{r} \approx 1.2$ was the default value for the isotherm. For some compounds, owing to lack of NIST REFPROP values at high temperatures and the desire to compare isochores and isotherms to NIST REFPROP values when possible, a lower reduced temperature ($T_\mathrm{r} \approx 1.05$) is chosen for the isotherm. Validations against NIST REFPROP values show that any reduced temperature from 1.05 to 1.2 led to acceptable accuracy (results not presented here).
 
 
 The integrations along the isotherm and isochores are performed using Simpson's rule \cite{atkinson2008}, due to its simplicity compared with other integration schemes as well as the possibility to use fixed step size for the integration so that simulations can be re-used for different isochores. Eq.~(\ref{eqn:eqn18}) and Eq.~(\ref{eqn:eqn19}) are
@@ -485,11 +434,7 @@ In the ITIC method, enthalpy of vaporization ($\Delta H_\mathrm{v}$) is calculat
 \label{eqn:Hvap}
 \end{equation}
 where $H^{\mathrm{dep}}_\mathrm{vap}$ and $H^{\mathrm{dep}}_\mathrm{liq}$ are unitless enthalpy departure functions of saturated vapor and liquid, respectively.
-%, defined as
-%\begin{equation}
-%H^{\mathrm{dep}}=\frac{H-H^{\mathrm{ig}}}{RT}
-%\label{hdep}
-%\end{equation}
+
 $H^{\mathrm{dep}}_\mathrm{vap}$ and $H^{\mathrm{dep}}_\mathrm{liq}$  can be calculated by subtracting the ideal gas contribution from both sides of $H=U+PV$
 
 \begin{equation}
@@ -509,7 +454,7 @@ U^{\mathrm{dep}}_\mathrm{vap}\approx \rho_{\mathrm{vap}} \beta \frac{dB_2}{d\bet
 \end{equation}
 
 \subsection{Critical Point Calculation}\label{sec:PcCalc}
-We follow the standard approach used in GEMC and GCMC methods to calculate the critial point. The critical temperature and critical density ($\rho_\mathrm{c}$) are estimated by the law of rectilinear diameter \cite{Rowlinson1982} and the density scaling law \cite{Rowlinson2013}
+We follow the standard approach used in GEMC and GCMC methods to calculate the critical point. The critical temperature and critical density ($\rho_\mathrm{c}$) are estimated by the law of rectilinear diameter \cite{Rowlinson1982} and the density scaling law \cite{Rowlinson2013}
 
 \begin{equation}
 \frac{\rho_{\mathrm{liq}} +\rho_{\mathrm{vap}}}{2}=\rho_\mathrm{c}+A(T_\mathrm{c}-T^{\mathrm{sat}})
@@ -522,33 +467,13 @@ We follow the standard approach used in GEMC and GCMC methods to calculate the c
 \end{equation}
 where $\rho_\mathrm{c}$, $ T_\mathrm{c}$, $A$ and $B$ are fit to simulation data.
 
-%Critical pressure ($P_\mathrm{c}$) and acentric factor ($\omega$) are calculated from Eq.(\ref{eqn:Lee-Kesler}) \cite{Lee1975} by fitting vapor pressure and saturation temperatures.
-			
-%\begin{equation}
-%{\ln \frac{P}{P_\mathrm{c}}=f^{(0)}+\omega f^{(1)}} 
-%\label{eqn:Lee-Kesler}
-%\end{equation}
-%where $f^{(0)}$ and $f^{(1)}$ terms are defined as
-%\begin{equation}
-%\begin{array}{l} 
-%{f^{(1)} = 15.2518 - \frac{15.6875}{T_\mathrm{r}} - 13.4721 \, \ln(T_\mathrm{r}) +   0.4357 \, T_\mathrm{r}^6 } \\ 
-%{ f^{(0)} = 5.9271 - \frac{6.0964}{T_\mathrm{r}} - 1.2886 \, \ln(T_\mathrm{r}) + 0.16934 \, T_\mathrm{r}^6  } 
-%\end{array} \label{eqn:Lee-Kesler-terms}
-%\end{equation}
-
-
 The critical pressure $(P_{\rm c})$ is computed in two steps. The first step is to fit the ITIC saturation temperatures $(T^{\rm sat})$ and pressures $(P^{\rm sat})$ to the Antoine equation \cite{rowlinson2013liquids}
 \begin{equation} \label{eqn:Antoine}
 \log_{10}(P^{\rm sat}) = a_0 + \frac{a_1}{a_2 + T^{\rm sat}}
 \end{equation} 
 where $a_i$ are fitting constants and $a_1$ is constrained to be negative. The second step is to evaluate Eq.(\ref{eqn:Antoine}) with the optimal values of $a_i$ for $T^{\rm sat} = T_{\rm c}$. 
 
-Some caution should be exercised when extrapolating Eqs.(\ref{eqn:rectilinearLaw}-\ref{eqn:Antoine}) because ITIC data are typically not available near the critical point. For example, we recommend excluding low temperature ITIC data ($T_{\rm r} < 0.6$) when fitting Eqs.(\ref{eqn:rectilinearLaw}-\ref{eqn:Antoine}) as these equations are typically not reliable over the entire temperature range. The results in Section ~\ref{sec:ExampleSim} demonstrate that, although ITIC is generally limited to $T_{\rm r} < 0.85$, careful application of Eqs.(\ref{eqn:rectilinearLaw}-\ref{eqn:Antoine}) provides reasonable estimates for all three critical constants.
-
-
-
-
-
+Some caution should be exercised when extrapolating Eq.(\ref{eqn:rectilinearLaw}-\ref{eqn:Antoine}) because ITIC data are typically not available near the critical point. For example, we recommend excluding low temperature ITIC data ($T_{\rm r} < 0.6$) when fitting Eqs.(\ref{eqn:rectilinearLaw}-\ref{eqn:Antoine}) as these equations are typically not reliable over the entire temperature range. The results in Section ~\ref{sec:ExampleSim} demonstrate that, although ITIC is generally limited to $T_{\rm r} < 0.85$, careful application of Eqs.(\ref{eqn:rectilinearLaw}-\ref{eqn:Antoine}) provides reasonable estimates for all three critical constants.
 
 
 
@@ -577,7 +502,7 @@ Figure~\ref{fig:convergence-path}(a) illustrates the convergence paths taken by 
 \subfloat[]{\includegraphics[scale=0.22]{Figures/Nist-Val-Deviation-rhoV.png}}
 \subfloat[]{\includegraphics[scale=0.22]{Figures/Nist-Val-Deviation-Hvap.png}}
 \caption{
-Accuracy of the ITIC method for \textit{n}-dodecane when Eq.~(\ref{eqn:Zvap}) is truncated at $B_2$ and $B_3$ term. If $B_3$ is excluded the ITIC iteration does not converge, when $T_\mathrm{r}^{\mathrm{sat}}>0.9$. Y-axis represents deviations calculated using $\frac{\mathrm{ITIC - REFPROP}}{\mathrm{REFPROP}} \times 100$, which compares ITIC results using REFPROP state points with REFPROP coesistence data.
+Accuracy of the ITIC method for \textit{n}-dodecane when Eq.~(\ref{eqn:Zvap}) is truncated at $B_2$ and $B_3$ term. If $B_3$ is excluded the ITIC iteration does not converge, when $T_\mathrm{r}^{\mathrm{sat}}>0.9$. Y-axis represents deviations calculated using $\frac{\mathrm{ITIC - REFPROP}}{\mathrm{REFPROP}} \times 100$, which compares ITIC results using REFPROP state points with REFPROP coexistence data.
 }
 \label{fig:Nist-Val-Deviation}
 \end{figure*}
@@ -643,7 +568,7 @@ For each compound, 26 $NVT$ points are simulated in order to obtain 5 saturation
 
 The Packmol \cite{martinez2009packmol} software is used to create the initial configurations for LAMMPS and GOMC simulations, while Cassandra and GROMACS simulations were initialized using internal capabilities of this software. These initialization methods were adequate for generating the highest density liquid phase configurations of the most complex molecules studied. However, for even more challenging systems where these techniques might fail, we recommend initializing at a lower density and slowly compressing the box size to the desired density. 
 
-The simulation boxes typically contain 1200 sites except for the four simulations required for estimating $B_2$ at the isotherm temperature (the purple and green diamonds in Figure~\ref{fig:ITICpathway}) for which simulation boxes contain 4800 sites. Standard Periodic Boundary Conditions (PBCs) are used. Simulations are run for 10 million Monte Carlo steps, and the last 5 million MC steps are used for calculating the properties which ar stored every 50,000 MC steps. 
+The simulation boxes typically contain 1200 sites except for the four simulations required for estimating $B_2$ at the isotherm temperature (the purple and green diamonds in Figure~\ref{fig:ITICpathway}) for which simulation boxes contain 4800 sites. Standard Periodic Boundary Conditions (PBCs) are used. Simulations are run for 10 million Monte Carlo steps, and the last 5 million MC steps are used for calculating the properties which are stored every 50,000 MC steps. 
 
 
 In order to approximate the computational cost of the ITIC method, \textit{n}-dodecane  coexistence points obtained at reduced temperatures of 0.65, 0.75, and 0.85 using  GEMC are compared with the ITIC coexistence points obtained at liquid densities corresponding to reduced temperatures of approximately 0.65, 0.75, and 0.85. This temperature range is chosen because both  GEMC and ITIC are reliable within $0.65<T_\mathrm{r}<0.85$. Cassandra package is used for both simulations using an AMD 1.3 GHz processor. 3,500 and 13,500 MC cycles are used for equilibration and production of GEMC simulation, using five block averages to characterize the uncertainty. The average run-time of the three GEMC simulations is 15.8 hours with each simulation running on a separate CPU core, resulting in an average $P^\mathrm{sat}$ uncertainty of 7.5 \% (relative standard error). On the other hand, running ITIC state points for 500 MC cycles of equilibration and 2000 MC cycles of production with four block averages reproduced the GEMC results with 7.1 \% $P^\mathrm{sat}$ uncertainty. The ITIC simulations were run on 20 CPU core. The maximum run-time (highest density and lowest temperature) of ITIC simulations is 18.9 hours. Therefore, when the number of available CPU cores is not limited, the ITIC method is approximately 20\% slower than GEMC. If ITIC coexistence points at reduced temperatures of 0.45 and 0.55 are to be included, the maximum run-time slightly increases (i.e. 22.3 hours $\approx$ 40 \% additional computational time compared to GEMC), whereas GEMC is not feasible for \textit{n}-dodecane, unless a thermodynamic integration approach (i.e. Gibbs-Duhem) is used to extend the lower temperature limit of GEMC.
@@ -666,22 +591,7 @@ We emphasize that Eq.~(\ref{eqn:uDepForm}) should only be applied with small mol
 
 Section \ref{sec:ExampleSim} utilizes both methods for demonstrative purposes, where the single molecule method is implemented for larger molecules. A more detailed comparison between the two methods of calculating $U^{\mathrm{dep}}$ (i.e., Eq.~(\ref{eqn:uDep single molecule})-(\ref{eqn:uDepForm})) is discussed in Supplementary Material.
 
-%\subsection{Internal Energy Departure Function Calculation}\label{sec:udepCalc}
-%The internal energy departure function in Eq.~(\ref{eqn:eqn8}) can be calculated for isochoric points using Eq.~(\ref{eqn:uDepForm})
 
-%\begin{equation}
-%U^{\mathrm{dep}} = \frac{E^{\mathrm{tot}} - E^{\mathrm{bonded}} - E^{\mathrm{intra}}}{NRT}\label{eqn:uDepForm}
-%\end{equation}
-%where $E^{\mathrm{tot}}$, $E^{\mathrm{bonded}}$, and $E^{\mathrm{intra}}$ are the total potential energy, bonded energy (bond, angle, and dihedral), and intramolecular pairwise energy (coulumbic and van der Waals). Failing to subtract $E^{\mathrm{intra}}$ causes a significant error in vapor pressure. A post-processing code is required to calculate this quantity, if the molecular simulation package does not provide an internal way of estimating $E^{\mathrm{intra}}$. For example, LAMMPS simulations require this post-processing.  In this case it is necessary to output the site coordinates periodically after the simulation reaches equilibrium. 
-
-%An underlying assumption of Eq.~(\ref{eqn:eqn8}) is that the intramolecular energy (ideal gas contribution) does not depend on density of the system. This assumption might not hold true for dense systems and large molecules, where the overall configuration of moleucles, hence the intramolecular non-bonded and bonded energies, is affected by closeness of the molecules. A more rigorous way of calculating ideal gas energy is to obtain the total energy from simulation of a single molecule system. The internal energy departure function is calculated using
-
-%\begin{equation}
-%U^{\mathrm{dep}} = \frac{E^{\mathrm{tot}} - N \times E^{\mathrm{single\,molecule}}}{NRT}\label{eqn:uDepFormSingle}
-%\end{equation}
-%where $E^\mathrm{single\,molecule}$ represents the total potential energy of the single molecule simulation. Using single molecules approach to calculate $U^\mathrm{dep}$ requires performing single molecule simulations for ITIC points on isochores. Fortunately, these simulation equilibriate very fast, so the extra simulation time incurred as a result of using this approach is not significant. A comparison between the two methods of calculating $U^{\mathrm{dep}}$ is discussed in Supplementary Material.
-
-%Todo: In Section~\ref{sec:ExampleSim}, we confirm that $U^\mathrm{dep}$ values from Eq.~(\ref{eqn:eqn8}) and single molecule approach are in agreement within their uncertainties.
 
 \subsection{Bootstrapping Method for Uncertainty Calculation}\label{sec:bootstrapping}
 Bootstrapping is used to estimate the statistical uncertainties \cite{Efron1981} in $T^\mathrm{sat}$, $P^\mathrm{sat}$, $\rho_\mathrm{vap}$, and $\Delta H_\mathrm{v}$. Note that the ITIC method determines saturation conditions at a fixed value of $\rho_{\mathrm{liq}}$ (equal to the isochoric density) and, therefore, the bootstrap uncertainty in $\rho_{\mathrm{liq}}$ is zero. Four series of independent $NVT$ simulations are performed for each compound using different random number generator seeds. Each series of $NVT$ simulations comprises 26 state points including four at $T_\mathrm{r}=0.9$ and three on isotherm used to estimate $B_2$. In order to increase the number of samples, the production data in each run is divided into two blocks. The ITIC analysis is performed using $NVT$ state points randomly selected from the eight blocks, and saturation properties are computed. This process is repeated 500 times resulting in 500 sample values for each saturation property. The 95 \% confidence intervals are then calculated from the resulting 500 ITIC outputs. 
@@ -689,6 +599,7 @@ Bootstrapping is used to estimate the statistical uncertainties \cite{Efron1981}
 The resulting uncertainties are used to generate error bars represented in Figure~\ref{fig:EXAMPLE-SIM/all}, however in most cases the error bars are smaller than the symbols. For greater clarity, uncertainties are tabulated in supplementary material for each property at each saturation condition.
 
 \section{Calculation of Virial Coefficients} \label{sec:VirialCalc}
+\subsection{Virial Correlations from Simulation} \label{sec:VirialCorrelations}
 Mayer Sampling is a common approach for estimating virial coefficients of a given force field \cite{singh2004mayer}. For example, Kofke and Schultz implement this approach for \textit{n}-alkanes \cite{Schultz2010a}. Efforts like those of Kofke and Schultz could make simulations on the lower end of supercritical isotherm unnecessary \cite{barlow2015communication}, in addition to facilitating computations just below the critical temperature.  Furthermore, the higher virial coefficients play a significant role on their own merits in the development of high accuracy equations of state for simulation models \cite{thol2016equation}.
 
 In this study, we use a simpler approach that is amenable for developing a correlation for $B_2$ and $B_3$ with respect to temperature. Second virial coefficients are estimated by calculating the intercept of $(Z-1)/\rho$ with respect to $\rho$. In principle, the slope of this line at zero density also gives the third virial coefficient. Figure~\ref{fig:TraPPE-C2-Z1rho-B2-B3} shows the accuracy of this method when used at various temperatures. The blue lines in Figure~\ref{fig:TraPPE-C2-Z1rho-B2-B3}(a) are obtained from Eq.~(\ref{eqn:Z1rhoB2B3})
@@ -751,21 +662,14 @@ Solving three equations (Eq.~(\ref{eqn:b2it})/(\ref{eqn:b2TrPoint9}), (\ref{eqn:
 
 $B_3$ calculation using Eq.~(\ref{eqn:Z1rhoB2B3}) deviates significantly from the rigorous values, as shown in Figure~\ref{fig:TraPPE-C2-Z1rho-B2-B3}(c). Therefore, $B_3$ values estimated this way are useful but should be regarded as ``effective" values that indirectly account for $B_4$ and higher order terms. On the other hand, more accurate representation of $(Z-1)/\rho$ is achieved using the $B_3^\mathrm{eff}$ from Eq.~(\ref{eqn:Z1rhoB2B3}) than using the rigorous $B_3$ or the rigorous $B_3$ and $B_4$ in combination, as shown in Figure~\ref{fig:FSE_TraPPE_C2_abc} (compare solid and dashed black lines with green line). Note that in the ITIC applications considered in this study, only second virial coefficient is used, therefore obtaining accurate $B_3$ is not a concern.
 
-%For the current implementation of ITIC, Eq.~(\ref{eqn:Z1rhoB2B3}) with $B_3^\mathrm{eff}$ is used at $T_\mathrm{r}^\mathrm{sat} > 0.85$.
-
-\section{Accurate Low Density Simulations}\label{sec:FSE}
-%Todo: change "section" to "subsection" in the above line and maybe create another subsection for the above material
+\subsection{Accurate Low Density Simulations}\label{sec:FSE}
 According to Figure~\ref{fig:B2-sensitivity}(a), $P^{\mathrm{sat}}$ accuracy is sensitive to accuracy of $B_2$ values at the isothermal temperature ($B_2^{\mathrm{IT}}$). This sensitivity is due to accumulation of errors when integrating along isotherm, such that an error in $B_2^{\mathrm{IT}}$ affects the $A^{\mathrm{dep}}$ values at all other points along the isotherm and isochores. Similarly, one would expect a significant influence from low density points, i.e. points 1, 2, and 3 in Figure~(\ref{fig:ITICpathway}). Therefore, it is important to investigate the factors affecting the accuracy of $Z$ at low densities on the isotherm. The factors considered in this study are system size, the choice of MD or MC, and the choice of fixed bonds or flexible bonds. 
 
 The system size effects at low densities are demonstrated in Figure~\ref{fig:FSE_TraPPE_C2_abc}. Plot of $(Z-1)/\rho$ with respect to $\rho$ shown in Figure~\ref{fig:FSE_TraPPE_C2_abc}(a) demonstrates the effect of varying number of molecules in MD simulation of ethane with rigid bonds. Figure~\ref{fig:FSE_TraPPE_C2_abc}(a) demonstrates that, for the simulation times chosen, 3200 ethane molecules are necessary to obtain reliable estimates of $B_2$ and to match the $B_2+B_3 \rho+B_4 \rho^2$ line, which represents the rigorous values of $(Z-1)/\rho$. In the MD simulations shown in Figure~\ref{fig:FSE_TraPPE_C2_abc}(a) C-C bonds are held constant using the SHAKE algorithm \cite{Ryckaert1977}. 
 
 The effect of using flexible bonds is shown in Figure 9(b). Two key limitations exist for obtaining reliable estimates with flexible bond MD simulations. First, the MD flexible uncertainties are considerably larger than the MD rigid uncertainties. Note that the same number of production steps were used to compute the uncertainties for both MD flexible and MD rigid, for a given value of N. Second, while all of the MD rigid simulations equilibrated in less than 1 ns, the MD flexible systems at the lowest densities required equilibration times between 24-47 ns (with 24 ns corresponding to N = 120). The slow equilibration for MD flexible simulations is presumably due to the small number of intermolecular collisions at low density relative to the large number of intramolecular collisions.
 
-Figure~\ref{fig:FSE_TraPPE_C2_abc}(c) shows the low density $NVT$ state points simulated using GOMC \cite{Mick2013}. This plot shows that the MC method gives more reliable results than MD for low density $NVT$ state points. 
-%Presumably, this is because MC codes calculate the pressure using the intermolecular virial only.
-%Reviewer2: MC method are generally using the molecular virial route in which PV = NkT + W' where N is the number of molecules (not the number of atoms) and where the virial W' contains contributions from intermolecular forces only. 
-%Table~\ref{tab:FSE} compares the uncertainties of $Z$ when using different simulation methods. $\mathrm{STD}_1$ represents the average of four relative standard deviations of $Z$ (i.e., $\mathrm{STD}/Z\times100 \, \%$), each calculated during a single run, while $\mathrm{STD}_2$ is the relative standard deviation of $Z$ from four separate runs. According to this table, the standard deviations from four replicate simulations ($\mathrm{STD}_2$) are much smaller than the average standard deviation for a single run ($\mathrm{STD}_1$). Therefore, Figure~\ref{fig:FSE_TraPPE_C2_abc} is plotted based on $\mathrm{STD}_2$ uncertainties. Table~\ref{tab:FSE} also shows that MC results have nearly an order of magnitude smaller $\mathrm{STD}_1$ and $\mathrm{STD}_2$ than rigid or flexible MD results when $N < 3200$.  
-Therefore, we recommend using MC when simulating these low density points. The choice of MD or MC for other high density state points in ITIC method is less important, because they generally agree with each other within their uncertainties. %In this study, we use MC for all state points when computing VLE.
+Figure~\ref{fig:FSE_TraPPE_C2_abc}(c) shows the low density $NVT$ state points simulated using GOMC \cite{Mick2013}. This plot shows that the MC method gives more reliable results than MD for low density $NVT$ state points. Therefore, we recommend using MC when simulating these low density points. The choice of MD or MC for other high density state points in ITIC method is less important, because they generally agree with each other within their uncertainties.
 
 \begin{figure*}
 \centering
@@ -810,14 +714,12 @@ Saturation points calculated using the ITIC method are compared against TraPPE-U
 
 In Figure~\ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV}, the ITIC results of TraPPE-UA \textit{n}-dodecane are also compared with the Gibbs-Duhem integration method \cite{Ungerer2000}. Both methods provide a similar lower temperature limit and they are in relatively good agreement. Note that ITIC results for TraPPE-UA ethane are obtained near the triple point (i.e., $T^\mathrm{sat} \approx 95 K$). This demonstrates that ITIC can be applied for $T_\mathrm{r}^\mathrm{sat} \approx 0.3$.
 
-The ITIC method was also compared to histogram-reweighting GCMC provided in Figure~\ref{fig:EXAMPLE-SIM/all}(c) and Figure~\ref{fig:EXAMPLE-SIM/all}(d). GCMC results for Mie-UA \textit{n}-dodecane are not available below a minimum reduced temperature ($T_\mathrm{r}^{\mathrm{min}}$) of 0.67, however the ITIC method allowed us to calculate vapor pressure and liquid densities for reduced temperatures as low as 0.45. 
+The ITIC method was also compared to histogram reweighting GCMC provided in Figure~\ref{fig:EXAMPLE-SIM/all}(c) and Figure~\ref{fig:EXAMPLE-SIM/all}(d). GCMC results for Mie-UA \textit{n}-dodecane are not available below a minimum reduced temperature ($T_\mathrm{r}^{\mathrm{min}}$) of 0.67, however the ITIC method allowed us to calculate vapor pressure and liquid densities for reduced temperatures as low as 0.45. 
 
-In order to validate the ITIC method for polar molecules, the results of the ITIC method using TIP4P/2005 water simulated in Cassandra were compared against TIP4P/2005 data from the NIST Standard Reference Simulation Website \cite{Shen2008} simulated using grand-canonical Wang-Landau/Transition-matrix Monte Carlo and histogram re-weighting. Figure~ \ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV}, \ref{fig:EXAMPLE-SIM/all}(c), and \ref{fig:EXAMPLE-SIM/all}(d) show the agreement between the two methods for TIP4P/2005 water. The absolute average percent deviation between vapor pressure calculated using ITIC method and GCMC method for TIP4P/2005 water shown in Figure~ \ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV}(a) is less than 1 \%. This agreement shows that second virial coefficient can be obtained using Eq.~(\ref{eqn:Z1rhoB2B3}) for TIP4P/2005 model.
+In order to validate the ITIC method for polar molecules, the results of the ITIC method using TIP4P/2005 water simulated in Cassandra were compared against TIP4P/2005 data from the NIST Standard Reference Simulation Website \cite{Shen2008} simulated using grand-canonical Wang-Landau/Transition-matrix Monte Carlo and histogram reweighting. Figure~ \ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV}, \ref{fig:EXAMPLE-SIM/all}(c), and \ref{fig:EXAMPLE-SIM/all}(d) show the agreement between the two methods for TIP4P/2005 water. The absolute average percent deviation between vapor pressure calculated using ITIC method and GCMC method for TIP4P/2005 water shown in Figure~ \ref{fig:EXAMPLE-SIM/Deviation-Psat-rhoL-rhoV}(a) is less than 1 \%. This agreement shows that second virial coefficient can be obtained using Eq.~(\ref{eqn:Z1rhoB2B3}) for TIP4P/2005 model.
 
 Figure~\ref{fig:EXAMPLE-SIM/all} includes the critical points obtained using the method described in Section~\ref{sec:ITIC-method}. The ITIC coexistence points 
 shown in this figure do not exceed $T_\mathrm{r}^\mathrm{sat} \approx 0.85$, the estimated critical properties are subject to larger uncertainties and possible systematic deviations. In the case of TIP4P/2005 water, critical point calculation requires a more suitable method as shown in Ref.~\cite{Vega2006}. Accurate estimation of critical points by molecular simulation requires a careful and deliberate effort that includes accounting for system size effects \cite{orkoulas2001precise}. That effort goes beyond the scope of the current manuscript.
-
-%Prerev: Figure~\ref{fig:EXAMPLE-SIM/all} includes the critical points obtained using the method described in Section~\ref{sec:ITIC-method}. Even though the ITIC coexistence points shown in this figure do not exceed $T_\mathrm{r}^\mathrm{sat} \approx 0.85$, acceptable critical properties were obtained, with the exception of TIP4P/2005 water. A more suitable method has been used in Ref.~\cite{Vega2006} to calculate critical properties of water.
 
 One limitation of the ITIC approach is the need for a reasonable value of $T_\mathrm{est}^\mathrm{sat}$. The ITIC calculations shown so far are done for well-known molecules for which extensive experimental data are available. All force fields considered (TraPPE-UA, Mie-UA, TIP4P/2005) provide accurate representation of the $T^\mathrm{sat}$ vs. $\rho_\mathrm{liq}$ curve compared to experimental data. Therefore, the $T_\mathrm{est}^\mathrm{sat}$ values for these compounds were obtained from DIPPR database. However, it is important to make sure that ITIC method also works for the molecules for which experimental data are not available. For example, 1-naphthalenyl, 4-phenanthrenyl butane is a large aromatic with 5 rings and 28 united-atom sites for which, to the best of our knowledge, no experimental data is available. In this case, a simple linear extrapolation using two points (black (x) symbols in Figure~\ref{fig:Ex_Sim_TraPPE-1p4nB}(a)) along the isochore is used to obtain $T_\mathrm{est}^\mathrm{sat}$, i.e. the temperature at which $Z\approx0$. Once $T_\mathrm{est}^\mathrm{sat}$ is calculated, the procedure in Figure~2 is followed. Figure~\ref{fig:Ex_Sim_TraPPE-1p4nB}(b-c) shows good agreement between the ITIC method with $T_\mathrm{est}^\mathrm{sat}$ as above and both GCMC and GEMC results obtained using GOMC.
 
@@ -850,20 +752,13 @@ The presentation here has focused primarily on GEMC as a basis for comparison, o
 In conclusion, ITIC can easily be implemented from $T_\mathrm{r} = 0.45$ to $0.85$ with approximately 40 \% additional computational time over the 0.6 to 0.85 temperature range using GEMC. If temperatures above 0.85 are required, it is recommended to approach the problem of coexistence calculation with a combination of Monte Carlo (GEMC or GCMC) and isothermal-isochoric integration. If a single method is preferred, or if MD is the preferred simulation method, ITIC has notable advantages. These advantages could be enhanced over time with the availability of rigorous higher order virial coefficients for broader ranges of molecular types. 
 
 \section{Acknowledgments}
+This research was performed while R.A.M. held a National Research Council (NRC) Postdoctoral Research Associateship at the National Institute of Standards and Technology (NIST). Contribution of NIST, an agency of the United States government; not subject to copyright in the United States. We would like to thank the reviewers whose comments helped improve this manuscript as well as Mr. Mohammad Soroush Barhaghi for providing GCMC data used in Figure~(\ref{fig:Ex_Sim_TraPPE-1p4nB}). 
 
-This research was performed while R.A.M. held a National Research Council (NRC) Postdoctoral Research Associateship at the National Institute of Standards and Technology (NIST). Contribution of NIST, an agency of the United States government; not subject to copyright in the United States. We would like to thank the reviewers whose comments helped improve this manuscript as well as Mr. Mohammad Soroush Barhaghi for providing GCMC data used in Figure~(12).
-%%%
 
 \section{Supplementary Material} \label{sec:SupMat} 
-See supplementary material for 
-%density, temperature, compressibility factor, and energies of simulated state points for all simulated compounds, as well as 
-the isothermal/isochoric plots of $A^{\mathrm{dep}}$, $U^{\mathrm{dep}}$, $Z$, and plots of $\Delta H_{\mathrm{v}}$, and $B_2$ for all example simulations. Also included are data shown in Figure~\ref{fig:Nist-Val-Deviation} and figures of $T^\mathrm{sat}_\mathrm{est}$ sensitivity study using simulation data. The ITIC code is avilable at \url{https://github.com/mostafa-razavi/ITIC}
-
-%Todo: make this an actual link so the reader can open it from PDF
+See supplementary material for the isothermal/isochoric plots of $A^{\mathrm{dep}}$, $U^{\mathrm{dep}}$, $Z$, and plots of $\Delta H_{\mathrm{v}}$, and $B_2$ for all example simulations. Also included are data shown in Figure~\ref{fig:Nist-Val-Deviation} and figures of $T^\mathrm{sat}_\mathrm{est}$ sensitivity study using simulation data. The ITIC code is available at \url{https://github.com/mostafa-razavi/ITIC}
 
 \section{References} \label{sec:ref} 
-
-%\section*{References}
 
 \bibliography{ITIC-Paper}
 
